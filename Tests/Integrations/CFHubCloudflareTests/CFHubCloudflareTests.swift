@@ -7,8 +7,8 @@
 //
 
 import CFHubCore
-import Testing
 @testable import CFHubCloudflare
+import Testing
 
 @Test("Cloudflare integration has correct metadata")
 func testCloudflareIntegrationMetadata() async throws {
