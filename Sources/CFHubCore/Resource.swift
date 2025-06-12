@@ -76,18 +76,30 @@ public enum ResourceType: String, Sendable, Codable, CaseIterable {
 
     public var displayName: String {
         switch self {
-        case .cloudflarePages: return "Cloudflare Pages"
-        case .cloudflareWorker: return "Cloudflare Worker"
-        case .cloudflareDNS: return "Cloudflare DNS"
-        case .cloudflareR2: return "Cloudflare R2"
-        case .cloudflareKV: return "Cloudflare KV"
-        case .githubRepository: return "GitHub Repository"
-        case .githubAction: return "GitHub Action"
-        case .githubEnvironment: return "GitHub Environment"
-        case .githubDeployment: return "GitHub Deployment"
-        case .deployment: return "Deployment"
-        case .environment: return "Environment"
-        case .domain: return "Domain"
+        case .cloudflarePages:
+            return "Cloudflare Pages"
+        case .cloudflareWorker:
+            return "Cloudflare Worker"
+        case .cloudflareDNS:
+            return "Cloudflare DNS"
+        case .cloudflareR2:
+            return "Cloudflare R2"
+        case .cloudflareKV:
+            return "Cloudflare KV"
+        case .githubRepository:
+            return "GitHub Repository"
+        case .githubAction:
+            return "GitHub Action"
+        case .githubEnvironment:
+            return "GitHub Environment"
+        case .githubDeployment:
+            return "GitHub Deployment"
+        case .deployment:
+            return "Deployment"
+        case .environment:
+            return "Environment"
+        case .domain:
+            return "Domain"
         }
     }
 }

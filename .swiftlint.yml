@@ -186,8 +186,8 @@ custom_rules:
     message: "Actors should explicitly conform to Sendable for clarity"
     severity: warning
     
-  ai_attribution:
-    name: "AI Attribution Required"
-    regex: '\/\/ 🤖 Generated with \[Claude Code\]'
-    message: "Files must include AI attribution header"
-    severity: warning
+  # ai_attribution:
+  #   name: "AI Attribution Required"
+  #   regex: '^(?!.*🤖 Generated with \[Claude Code\]).+$'
+  #   message: "Files must include AI attribution header"
+  #   severity: error

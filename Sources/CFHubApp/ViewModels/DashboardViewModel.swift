@@ -199,7 +199,7 @@ class DashboardViewModel: ObservableObject {
 
     private func calculateDeploymentProgress(_ deployment: Resource) -> Double {
         // In a real implementation, this would parse deployment logs or status
-        return deployment.status.isTransitional ? 0.7 : 1.0
+        deployment.status.isTransitional ? 0.7 : 1.0
     }
 
     private func estimateCompletion(_ deployment: Resource) -> Date? {
@@ -215,7 +215,7 @@ class DashboardViewModel: ObservableObject {
     }
 
     private func countResourcesForEnvironment(_ environmentId: String, in status: InfrastructureStatus) -> Int {
-        return status.resources.filter { resource in
+        status.resources.filter { resource in
             resource.metadata.environment == environmentId
         }.count
     }
@@ -303,29 +303,39 @@ class DashboardViewModel: ObservableObject {
 
 /// Overall infrastructure health status
 enum OverallHealth: String, CaseIterable {
-    case healthy = "healthy"
-    case degraded = "degraded"
-    case warning = "warning"
-    case critical = "critical"
-    case unknown = "unknown"
+    case healthy
+    case degraded
+    case warning
+    case critical
+    case unknown
 
     var color: Color {
         switch self {
-        case .healthy: return .green
-        case .degraded: return .yellow
-        case .warning: return .orange
-        case .critical: return .red
-        case .unknown: return .gray
+        case .healthy:
+            return .green
+        case .degraded:
+            return .yellow
+        case .warning:
+            return .orange
+        case .critical:
+            return .red
+        case .unknown:
+            return .gray
         }
     }
 
     var iconName: String {
         switch self {
-        case .healthy: return "checkmark.circle.fill"
-        case .degraded: return "exclamationmark.triangle.fill"
-        case .warning: return "exclamationmark.triangle.fill"
-        case .critical: return "xmark.circle.fill"
-        case .unknown: return "questionmark.circle.fill"
+        case .healthy:
+            return "checkmark.circle.fill"
+        case .degraded:
+            return "exclamationmark.triangle.fill"
+        case .warning:
+            return "exclamationmark.triangle.fill"
+        case .critical:
+            return "xmark.circle.fill"
+        case .unknown:
+            return "questionmark.circle.fill"
         }
     }
 }

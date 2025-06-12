@@ -101,7 +101,6 @@ class AuthViewModel: ObservableObject {
             self.user = authResult.user
             self.activeProviders.insert(provider.identifier)
             self.isAuthenticated = true
-
         } catch {
             await handleError(.authenticationFailed(error.localizedDescription))
         }
@@ -134,7 +133,6 @@ class AuthViewModel: ObservableObject {
             // Update state
             self.credentials = updatedCredentials
             self.activeProviders.insert(provider.identifier)
-
         } catch {
             await handleError(.providerAddFailed(provider.displayName, error.localizedDescription))
         }
@@ -169,7 +167,6 @@ class AuthViewModel: ObservableObject {
             activeProviders.removeAll()
             isAuthenticated = false
             error = nil
-
         } catch {
             await handleError(.signOutFailed(error.localizedDescription))
         }

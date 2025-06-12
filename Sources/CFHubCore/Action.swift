@@ -126,32 +126,58 @@ public enum ActionOperation: Sendable, Codable {
 
     public var displayName: String {
         switch self {
-        case .createResource: return "Create Resource"
-        case .createEnvironment: return "Create Environment"
-        case .createDeployment: return "Create Deployment"
-        case .updateConfiguration: return "Update Configuration"
-        case .updateEnvironmentVariables: return "Update Environment Variables"
-        case .updateDNSRecords: return "Update DNS Records"
-        case .deleteResource: return "Delete Resource"
-        case .deleteEnvironment: return "Delete Environment"
-        case .deleteDeployment: return "Delete Deployment"
-        case .deployCode: return "Deploy Code"
-        case .deployConfiguration: return "Deploy Configuration"
-        case .deployToEnvironment: return "Deploy to Environment"
-        case .scaleUp: return "Scale Up"
-        case .scaleDown: return "Scale Down"
-        case .autoScale: return "Auto Scale"
-        case .start: return "Start"
-        case .stop: return "Stop"
-        case .restart: return "Restart"
-        case .pause: return "Pause"
-        case .resume: return "Resume"
-        case .backup: return "Backup"
-        case .restore: return "Restore"
-        case .migrate: return "Migrate"
-        case .rollbackToVersion: return "Rollback to Version"
-        case .rollbackToCommit: return "Rollback to Commit"
-        case .rollbackDeployment: return "Rollback Deployment"
+        case .createResource:
+            return "Create Resource"
+        case .createEnvironment:
+            return "Create Environment"
+        case .createDeployment:
+            return "Create Deployment"
+        case .updateConfiguration:
+            return "Update Configuration"
+        case .updateEnvironmentVariables:
+            return "Update Environment Variables"
+        case .updateDNSRecords:
+            return "Update DNS Records"
+        case .deleteResource:
+            return "Delete Resource"
+        case .deleteEnvironment:
+            return "Delete Environment"
+        case .deleteDeployment:
+            return "Delete Deployment"
+        case .deployCode:
+            return "Deploy Code"
+        case .deployConfiguration:
+            return "Deploy Configuration"
+        case .deployToEnvironment:
+            return "Deploy to Environment"
+        case .scaleUp:
+            return "Scale Up"
+        case .scaleDown:
+            return "Scale Down"
+        case .autoScale:
+            return "Auto Scale"
+        case .start:
+            return "Start"
+        case .stop:
+            return "Stop"
+        case .restart:
+            return "Restart"
+        case .pause:
+            return "Pause"
+        case .resume:
+            return "Resume"
+        case .backup:
+            return "Backup"
+        case .restore:
+            return "Restore"
+        case .migrate:
+            return "Migrate"
+        case .rollbackToVersion:
+            return "Rollback to Version"
+        case .rollbackToCommit:
+            return "Rollback to Commit"
+        case .rollbackDeployment:
+            return "Rollback Deployment"
         }
     }
 }

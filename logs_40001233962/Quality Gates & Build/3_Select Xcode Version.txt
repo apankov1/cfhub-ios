@@ -1,0 +1,6 @@
+﻿2025-06-12T06:56:10.8914080Z ##[group]Run sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+2025-06-12T06:56:10.8916020Z [36;1msudo xcode-select -s /Applications/Xcode.app/Contents/Developer[0m
+2025-06-12T06:56:10.8990490Z shell: /bin/bash -e {0}
+2025-06-12T06:56:10.8992380Z env:
+2025-06-12T06:56:10.8994330Z   DEVELOPER_DIR: /Applications/Xcode.app/Contents/Developer
+2025-06-12T06:56:10.8996900Z ##[endgroup]

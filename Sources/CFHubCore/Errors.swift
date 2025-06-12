@@ -124,32 +124,58 @@ public enum IntegrationError: Error, Sendable {
 
     public var errorCode: String {
         switch self {
-        case .authenticationFailed: return "AUTH_FAILED"
-        case .tokenExpired: return "TOKEN_EXPIRED"
-        case .insufficientPermissions: return "INSUFFICIENT_PERMISSIONS"
-        case .rateLimited: return "RATE_LIMITED"
-        case .networkUnavailable: return "NETWORK_UNAVAILABLE"
-        case .requestTimeout: return "REQUEST_TIMEOUT"
-        case .serverError: return "SERVER_ERROR"
-        case .invalidResponse: return "INVALID_RESPONSE"
-        case .resourceNotFound: return "RESOURCE_NOT_FOUND"
-        case .resourceAlreadyExists: return "RESOURCE_ALREADY_EXISTS"
-        case .resourceInInvalidState: return "RESOURCE_INVALID_STATE"
-        case .resourceLocked: return "RESOURCE_LOCKED"
-        case .actionNotSupported: return "ACTION_NOT_SUPPORTED"
-        case .actionFailed: return "ACTION_FAILED"
-        case .dependencyNotMet: return "DEPENDENCY_NOT_MET"
-        case .concurrentModification: return "CONCURRENT_MODIFICATION"
-        case .invalidConfiguration: return "INVALID_CONFIGURATION"
-        case .missingRequiredField: return "MISSING_REQUIRED_FIELD"
-        case .configurationConflict: return "CONFIGURATION_CONFLICT"
-        case .validationFailed: return "VALIDATION_FAILED"
-        case .unsupportedOperation: return "UNSUPPORTED_OPERATION"
-        case .quotaExceeded: return "QUOTA_EXCEEDED"
-        case .cloudflareError: return "CLOUDFLARE_ERROR"
-        case .githubError: return "GITHUB_ERROR"
-        case .unknown: return "UNKNOWN_ERROR"
-        case .internalError: return "INTERNAL_ERROR"
+        case .authenticationFailed:
+            return "AUTH_FAILED"
+        case .tokenExpired:
+            return "TOKEN_EXPIRED"
+        case .insufficientPermissions:
+            return "INSUFFICIENT_PERMISSIONS"
+        case .rateLimited:
+            return "RATE_LIMITED"
+        case .networkUnavailable:
+            return "NETWORK_UNAVAILABLE"
+        case .requestTimeout:
+            return "REQUEST_TIMEOUT"
+        case .serverError:
+            return "SERVER_ERROR"
+        case .invalidResponse:
+            return "INVALID_RESPONSE"
+        case .resourceNotFound:
+            return "RESOURCE_NOT_FOUND"
+        case .resourceAlreadyExists:
+            return "RESOURCE_ALREADY_EXISTS"
+        case .resourceInInvalidState:
+            return "RESOURCE_INVALID_STATE"
+        case .resourceLocked:
+            return "RESOURCE_LOCKED"
+        case .actionNotSupported:
+            return "ACTION_NOT_SUPPORTED"
+        case .actionFailed:
+            return "ACTION_FAILED"
+        case .dependencyNotMet:
+            return "DEPENDENCY_NOT_MET"
+        case .concurrentModification:
+            return "CONCURRENT_MODIFICATION"
+        case .invalidConfiguration:
+            return "INVALID_CONFIGURATION"
+        case .missingRequiredField:
+            return "MISSING_REQUIRED_FIELD"
+        case .configurationConflict:
+            return "CONFIGURATION_CONFLICT"
+        case .validationFailed:
+            return "VALIDATION_FAILED"
+        case .unsupportedOperation:
+            return "UNSUPPORTED_OPERATION"
+        case .quotaExceeded:
+            return "QUOTA_EXCEEDED"
+        case .cloudflareError:
+            return "CLOUDFLARE_ERROR"
+        case .githubError:
+            return "GITHUB_ERROR"
+        case .unknown:
+            return "UNKNOWN_ERROR"
+        case .internalError:
+            return "INTERNAL_ERROR"
         }
     }
 
@@ -230,10 +256,14 @@ public enum ErrorSeverity: String, Sendable, Codable, CaseIterable {
 
     public var priority: Int {
         switch self {
-        case .low: return 1
-        case .medium: return 2
-        case .high: return 3
-        case .critical: return 4
+        case .low:
+            return 1
+        case .medium:
+            return 2
+        case .high:
+            return 3
+        case .critical:
+            return 4
         }
     }
 }

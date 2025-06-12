@@ -1,0 +1,41 @@
+﻿2025-06-12T06:56:07.0535650Z Current runner version: '2.325.0'
+2025-06-12T06:56:07.0552270Z ##[group]Operating System
+2025-06-12T06:56:07.0552740Z macOS
+2025-06-12T06:56:07.0553030Z 14.7.6
+2025-06-12T06:56:07.0553320Z 23H626
+2025-06-12T06:56:07.0553620Z ##[endgroup]
+2025-06-12T06:56:07.0553930Z ##[group]Runner Image
+2025-06-12T06:56:07.0554280Z Image: macos-14-arm64
+2025-06-12T06:56:07.0554600Z Version: 20250609.1574
+2025-06-12T06:56:07.0555300Z Included Software: https://github.com/actions/runner-images/blob/macos-14-arm64/20250609.1574/images/macos/macos-14-arm64-Readme.md
+2025-06-12T06:56:07.0556270Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-14-arm64%2F20250609.1574
+2025-06-12T06:56:07.0556840Z ##[endgroup]
+2025-06-12T06:56:07.0557140Z ##[group]Runner Image Provisioner
+2025-06-12T06:56:07.0557510Z 2.0.437.1+b8a73daf41ec39b19236c1d542c9f2348c5b7c2d
+2025-06-12T06:56:07.0557900Z ##[endgroup]
+2025-06-12T06:56:07.0558540Z ##[group]GITHUB_TOKEN Permissions
+2025-06-12T06:56:07.0559400Z Contents: read
+2025-06-12T06:56:07.0559760Z Metadata: read
+2025-06-12T06:56:07.0560040Z Packages: read
+2025-06-12T06:56:07.0560330Z ##[endgroup]
+2025-06-12T06:56:07.0561550Z Secret source: Actions
+2025-06-12T06:56:07.0561920Z Prepare workflow directory
+2025-06-12T06:56:07.0798240Z Prepare all required actions
+2025-06-12T06:56:07.0824960Z Getting action download info
+2025-06-12T06:56:07.5043760Z ##[group]Download immutable action package 'actions/checkout@v4'
+2025-06-12T06:56:07.5044490Z Version: 4.2.2
+2025-06-12T06:56:07.5045060Z Digest: sha256:ccb2698953eaebd21c7bf6268a94f9c26518a7e38e27e0b83c1fe1ad049819b1
+2025-06-12T06:56:07.5045750Z Source commit SHA: 11bd71901bbe5b1630ceea73d27597364c9af683
+2025-06-12T06:56:07.5046180Z ##[endgroup]
+2025-06-12T06:56:07.7224270Z ##[group]Download immutable action package 'actions/cache@v4'
+2025-06-12T06:56:07.7224980Z Version: 4.2.3
+2025-06-12T06:56:07.7225450Z Digest: sha256:c8a3bb963e1f1826d8fcc8d1354f0dd29d8ac1db1d4f6f20247055ae11b81ed9
+2025-06-12T06:56:07.7226040Z Source commit SHA: 5a3ec84eff668545956fd18022155c47e93e2684
+2025-06-12T06:56:07.7226520Z ##[endgroup]
+2025-06-12T06:56:07.8970340Z Download action repository 'codecov/codecov-action@v4' (SHA:b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238)
+2025-06-12T06:56:08.9559280Z ##[group]Download immutable action package 'actions/upload-artifact@v4'
+2025-06-12T06:56:08.9559980Z Version: 4.6.2
+2025-06-12T06:56:08.9560510Z Digest: sha256:290722aa3281d5caf23d0acdc3dbeb3424786a1a01a9cc97e72f147225e37c38
+2025-06-12T06:56:08.9561220Z Source commit SHA: ea165f8d65b6e75b540449e92b4886f43607fa02
+2025-06-12T06:56:08.9561700Z ##[endgroup]
+2025-06-12T06:56:09.1251030Z Complete job name: Quality Gates & Build
