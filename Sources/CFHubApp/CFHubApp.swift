@@ -148,6 +148,10 @@ class AppState: ObservableObject {
         startHealthCheckTimer()
         isInitialized = true
     }
+    
+    func cleanup() {
+        stopHealthCheckTimer()
+    }
 
     func activateIntegrations(with credentials: AuthCredentials) async {
         // Activate integrations based on available credentials
@@ -178,6 +182,7 @@ class AppState: ObservableObject {
             await integrationRegistry.deactivateIntegration(identifier: identifier)
         }
         integrationStatus.removeAll()
+        stopHealthCheckTimer()
     }
 
     private func performHealthCheck() async {
@@ -195,9 +200,10 @@ class AppState: ObservableObject {
             }
         }
     }
-
-    deinit {
+    
+    func stopHealthCheckTimer() {
         healthCheckTimer?.invalidate()
+        healthCheckTimer = nil
     }
 }
 
