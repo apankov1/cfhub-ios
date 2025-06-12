@@ -318,7 +318,11 @@ struct EnvironmentCard: View {
             }
         }
         .padding(12)
+        #if os(iOS)
         .background(Color(.secondarySystemBackground))
+        #else
+        .background(Color(NSColor.controlBackgroundColor))
+        #endif
         .cornerRadius(8)
     }
 }
@@ -385,7 +389,11 @@ struct QuickActionButton: View {
             }
             .padding()
             .frame(maxWidth: .infinity)
+            #if os(iOS)
             .background(Color(.secondarySystemBackground))
+            #else
+            .background(Color(NSColor.controlBackgroundColor))
+            #endif
             .cornerRadius(8)
         }
         .buttonStyle(PlainButtonStyle())
