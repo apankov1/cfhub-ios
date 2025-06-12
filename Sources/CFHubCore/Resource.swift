@@ -9,7 +9,7 @@
 import Foundation
 
 /// Core resource model following cloudflare-hub distributed types pattern
-/// 
+///
 /// Resources represent any manageable infrastructure component across
 /// all integrations (Cloudflare Pages, GitHub Repos, etc.)
 public struct Resource: Sendable, Codable, Identifiable {
@@ -21,7 +21,7 @@ public struct Resource: Sendable, Codable, Identifiable {
     public let metadata: ResourceMetadata
     public let createdAt: Date
     public let updatedAt: Date
-    
+
     public init(
         id: String,
         type: ResourceType,
@@ -51,18 +51,18 @@ public enum ResourceType: String, Sendable, Codable, CaseIterable {
     case cloudflareDNS = "cloudflare_dns"
     case cloudflareR2 = "cloudflare_r2"
     case cloudflareKV = "cloudflare_kv"
-    
+
     // GitHub Resources
     case githubRepository = "github_repository"
     case githubAction = "github_action"
     case githubEnvironment = "github_environment"
     case githubDeployment = "github_deployment"
-    
+
     // Generic Resources
     case deployment = "deployment"
     case environment = "environment"
     case domain = "domain"
-    
+
     public var integrationIdentifier: String {
         switch self {
         case .cloudflarePages, .cloudflareWorker, .cloudflareDNS, .cloudflareR2, .cloudflareKV:
@@ -73,7 +73,7 @@ public enum ResourceType: String, Sendable, Codable, CaseIterable {
             return "core"
         }
     }
-    
+
     public var displayName: String {
         switch self {
         case .cloudflarePages: return "Cloudflare Pages"
@@ -102,7 +102,7 @@ public enum ResourceStatus: String, Sendable, Codable, CaseIterable {
     case failed = "failed"
     case suspended = "suspended"
     case unknown = "unknown"
-    
+
     public var isHealthy: Bool {
         switch self {
         case .active:
@@ -113,7 +113,7 @@ public enum ResourceStatus: String, Sendable, Codable, CaseIterable {
             return false
         }
     }
-    
+
     public var isTransitional: Bool {
         switch self {
         case .creating, .updating, .deleting:
@@ -127,11 +127,11 @@ public enum ResourceStatus: String, Sendable, Codable, CaseIterable {
 /// Flexible configuration for any resource type
 public struct ResourceConfiguration: Sendable, Codable {
     private let storage: [String: ConfigurationValue]
-    
+
     public init(_ dictionary: [String: ConfigurationValue] = [:]) {
         self.storage = dictionary
     }
-    
+
     public subscript<T: Codable & Sendable>(key: String, as type: T.Type) -> T? {
         get {
             storage[key]?.value as? T
@@ -146,11 +146,11 @@ public struct ResourceConfiguration: Sendable, Codable {
             // Note: This would need to be implemented as a mutating method in practice
         }
     }
-    
+
     public func value<T: Codable & Sendable>(for key: String, as type: T.Type) -> T? {
         storage[key]?.value as? T
     }
-    
+
     public mutating func setValue<T: Codable & Sendable>(_ value: T?, for key: String) {
         var mutableStorage = storage
         if let value = value {
@@ -160,7 +160,7 @@ public struct ResourceConfiguration: Sendable, Codable {
         }
         self = ResourceConfiguration(mutableStorage)
     }
-    
+
     public var keys: [String] {
         Array(storage.keys)
     }
@@ -170,15 +170,15 @@ public struct ResourceConfiguration: Sendable, Codable {
 public struct ConfigurationValue: Sendable, Codable {
     public let value: any Codable & Sendable
     private let typeIdentifier: String
-    
+
     public init<T: Codable & Sendable>(_ value: T) {
         self.value = value
         self.typeIdentifier = String(describing: T.self)
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
-        
+
         switch value {
         case let string as String:
             try container.encode(string)
@@ -202,10 +202,10 @@ public struct ConfigurationValue: Sendable, Codable {
             )
         }
     }
-    
+
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
-        
+
         if let string = try? container.decode(String.self) {
             self.value = string
             self.typeIdentifier = "String"
@@ -245,7 +245,7 @@ public struct ResourceMetadata: Sendable, Codable {
     public let team: String?
     public let environment: String?
     public let costCenter: String?
-    
+
     public init(
         tags: [String] = [],
         labels: [String: String] = [:],

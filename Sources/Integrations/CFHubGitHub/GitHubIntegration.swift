@@ -6,19 +6,19 @@
 // Co-Authored-By: Claude <noreply@anthropic.com>
 //
 
-import Foundation
-import CFHubCore
 import CFHubClient
+import CFHubCore
+import Foundation
 
 /// GitHub integration for CFHub iOS
-/// 
+///
 /// Self-contained integration following cloudflare-hub patterns.
 /// Owns all GitHub-specific types, API calls, and business logic.
 public actor GitHubIntegration: Integration {
     public static let identifier = "github"
     public static let displayName = "GitHub"
     public static let version = "1.0.0"
-    
+
     public static let requiredPermissions: [Permission] = [
         Permission(scope: "repo", level: .read, description: "Read repositories"),
         Permission(scope: "repo", level: .write, description: "Manage repositories"),
@@ -27,20 +27,20 @@ public actor GitHubIntegration: Integration {
         Permission(scope: "deployments", level: .read, description: "Read deployments"),
         Permission(scope: "deployments", level: .write, description: "Create deployments")
     ]
-    
+
     private let client: HTTPClient
     private let configuration: IntegrationConfiguration
-    
+
     public init(configuration: IntegrationConfiguration) async throws {
         self.configuration = configuration
-        
+
         // Initialize HTTP client with GitHub API settings
         var headers = [
             "Accept": "application/vnd.github+json",
             "X-GitHub-Api-Version": "2022-11-28",
             "User-Agent": "CFHub-iOS/\(Self.version)"
         ]
-        
+
         // Add authentication header
         switch configuration.authentication {
         case .bearer(let token):
@@ -50,26 +50,30 @@ public actor GitHubIntegration: Integration {
         default:
             throw IntegrationError.authenticationFailed(reason: "Invalid authentication method for GitHub")
         }
-        
+
+        guard let baseURL = URL(string: configuration.baseURL) else {
+            throw IntegrationError.invalidConfiguration(reason: "Invalid base URL: \(configuration.baseURL)")
+        }
+
         self.client = HTTPClient(
-            baseURL: URL(string: configuration.baseURL)!,
+            baseURL: baseURL,
             defaultHeaders: headers,
             retryPolicy: configuration.retryPolicy,
             timeout: configuration.timeout
         )
-        
+
         // Verify authentication
         try await verifyAuthentication()
     }
-    
+
     public func getActualState() async throws -> [Resource] {
         var resources: [Resource] = []
-        
+
         // Get all resources in parallel
         async let repositories = getGitHubRepositories()
         async let deployments = getGitHubDeployments()
         async let environments = getGitHubEnvironments()
-        
+
         do {
             let (reposResult, deploymentsResult, environmentsResult) = try await (repositories, deployments, environments)
             resources.append(contentsOf: reposResult)
@@ -81,32 +85,32 @@ public actor GitHubIntegration: Integration {
                 underlyingError: error.localizedDescription
             )
         }
-        
+
         return resources
     }
-    
+
     public func plan(desired: [Resource]) async throws -> [Action] {
         let actual = try await getActualState()
         return try generateActions(from: actual, to: desired)
     }
-    
+
     public func apply(actions: [Action]) async throws -> ApplyResult {
         let startTime = Date()
         var successful: [Action] = []
         var failed: [FailedAction] = []
-        
+
         // Execute actions sequentially to handle dependencies
         for action in actions {
             do {
                 try await executeAction(action)
                 successful.append(action)
             } catch {
-                let integrationError = error as? IntegrationError ?? 
+                let integrationError = error as? IntegrationError ??
                     IntegrationError.unknown(message: error.localizedDescription)
                 failed.append(FailedAction(action: action, error: integrationError))
             }
         }
-        
+
         return ApplyResult(
             successful: successful,
             failed: failed,
@@ -117,7 +121,7 @@ public actor GitHubIntegration: Integration {
             ]
         )
     }
-    
+
     public func rollback() async throws {
         // GitHub rollback implementation would go here
         throw IntegrationError.unsupportedOperation(
@@ -125,19 +129,19 @@ public actor GitHubIntegration: Integration {
             context: "GitHub rollback not yet implemented"
         )
     }
-    
+
     public func healthCheck() async throws -> HealthStatus {
         let startTime = Date()
-        
+
         do {
             // Simple health check - get user info
             let response = try await client.get(
                 path: "/user",
                 responseType: GitHubUser.self
             )
-            
+
             let latency = Date().timeIntervalSince(startTime)
-            
+
             return HealthStatus(
                 isHealthy: response.isSuccessful,
                 latency: latency,
@@ -158,16 +162,16 @@ public actor GitHubIntegration: Integration {
             )
         }
     }
-    
+
     // MARK: - Private Methods
-    
+
     private func verifyAuthentication() async throws {
         let health = try await healthCheck()
         guard health.isHealthy else {
             throw IntegrationError.authenticationFailed(reason: "Health check failed")
         }
     }
-    
+
     private func getGitHubRepositories() async throws -> [Resource] {
         // Get repositories for the authenticated user
         let response = try await client.get(
@@ -179,11 +183,11 @@ public actor GitHubIntegration: Integration {
             ],
             responseType: [GitHubRepository].self
         )
-        
+
         guard let repositories = response.body else {
             return []
         }
-        
+
         return repositories.map { repo in
             Resource(
                 id: String(repo.id),
@@ -208,30 +212,30 @@ public actor GitHubIntegration: Integration {
             )
         }
     }
-    
+
     private func getGitHubDeployments() async throws -> [Resource] {
         // In a real implementation, we'd get deployments for specific repositories
         // For now, return empty array as this requires repository context
         return []
     }
-    
+
     private func getGitHubEnvironments() async throws -> [Resource] {
         // In a real implementation, we'd get environments for specific repositories
         // For now, return empty array as this requires repository context
         return []
     }
-    
+
     private func getRepositoryDeployments(owner: String, repo: String) async throws -> [Resource] {
         let response = try await client.get(
             path: "/repos/\(owner)/\(repo)/deployments",
             queryParameters: ["per_page": "50"],
             responseType: [GitHubDeployment].self
         )
-        
+
         guard let deployments = response.body else {
             return []
         }
-        
+
         return deployments.map { deployment in
             Resource(
                 id: String(deployment.id),
@@ -253,14 +257,14 @@ public actor GitHubIntegration: Integration {
             )
         }
     }
-    
+
     private func generateActions(from actual: [Resource], to desired: [Resource]) throws -> [Action] {
         var actions: [Action] = []
-        
+
         // Simple diff logic - in practice this would be more sophisticated
         let actualIds = Set(actual.map(\.id))
         let desiredIds = Set(desired.map(\.id))
-        
+
         // Resources to create
         for desiredResource in desired where !actualIds.contains(desiredResource.id) {
             actions.append(Action(
@@ -270,7 +274,7 @@ public actor GitHubIntegration: Integration {
                 operation: .createResource(configuration: desiredResource.configuration)
             ))
         }
-        
+
         // Resources to delete
         for actualResource in actual where !desiredIds.contains(actualResource.id) {
             actions.append(Action(
@@ -280,10 +284,10 @@ public actor GitHubIntegration: Integration {
                 operation: .deleteResource
             ))
         }
-        
+
         return actions
     }
-    
+
     private func executeAction(_ action: Action) async throws {
         switch (action.type, action.resourceType) {
         case (.create, .githubRepository):
@@ -301,7 +305,7 @@ public actor GitHubIntegration: Integration {
             )
         }
     }
-    
+
     private func createGitHubRepository(_ action: Action) async throws {
         // Implementation would create a GitHub repository
         throw IntegrationError.unsupportedOperation(
@@ -309,7 +313,7 @@ public actor GitHubIntegration: Integration {
             context: "GitHub repository creation not yet implemented"
         )
     }
-    
+
     private func deleteGitHubRepository(_ action: Action) async throws {
         // Implementation would delete a GitHub repository
         throw IntegrationError.unsupportedOperation(
@@ -317,7 +321,7 @@ public actor GitHubIntegration: Integration {
             context: "GitHub repository deletion not yet implemented"
         )
     }
-    
+
     private func createGitHubDeployment(_ action: Action) async throws {
         // Implementation would create a GitHub deployment
         throw IntegrationError.unsupportedOperation(
@@ -325,7 +329,7 @@ public actor GitHubIntegration: Integration {
             context: "GitHub deployment creation not yet implemented"
         )
     }
-    
+
     private func triggerGitHubDeployment(_ action: Action) async throws {
         // Implementation would trigger a GitHub Actions workflow
         throw IntegrationError.unsupportedOperation(
@@ -333,7 +337,7 @@ public actor GitHubIntegration: Integration {
             context: "GitHub deployment triggering not yet implemented"
         )
     }
-    
+
     private func mapGitHubDeploymentStatus(_ statusesUrl: String) -> ResourceStatus {
         // In a real implementation, we'd fetch the actual deployment status
         // For now, default to active

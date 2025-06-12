@@ -9,18 +9,18 @@
 import Foundation
 
 /// Registry for managing available integrations in CFHub
-/// 
+///
 /// This follows the plugin discovery pattern from cloudflare-hub,
 /// allowing the core system to dynamically discover and instantiate
 /// integrations without tight coupling.
 public actor IntegrationRegistry: Sendable {
     private var registeredIntegrations: [String: any IntegrationFactory] = [:]
     private var activeIntegrations: [String: any Integration] = [:]
-    
+
     public static let shared = IntegrationRegistry()
-    
+
     private init() {}
-    
+
     /// Register an integration factory
     public func register<T: Integration>(
         _ integrationType: T.Type,
@@ -35,7 +35,7 @@ public actor IntegrationRegistry: Sendable {
         )
         registeredIntegrations[T.identifier] = wrapper
     }
-    
+
     /// Get all registered integration metadata
     public func getRegisteredIntegrations() -> [IntegrationMetadata] {
         return registeredIntegrations.values.map { factory in
@@ -48,7 +48,7 @@ public actor IntegrationRegistry: Sendable {
             )
         }
     }
-    
+
     /// Create and activate an integration
     public func activateIntegration(
         identifier: String,
@@ -57,35 +57,35 @@ public actor IntegrationRegistry: Sendable {
         guard let factory = registeredIntegrations[identifier] else {
             throw IntegrationError.unknown(message: "Integration '\(identifier)' not found")
         }
-        
+
         // Create the integration instance
         let integration = try await factory.create(configuration: configuration)
-        
+
         // Store the active integration
         activeIntegrations[identifier] = integration
-        
+
         return integration
     }
-    
+
     /// Get an active integration
     public func getIntegration(identifier: String) -> (any Integration)? {
         return activeIntegrations[identifier]
     }
-    
+
     /// Deactivate an integration
     public func deactivateIntegration(identifier: String) {
         activeIntegrations.removeValue(forKey: identifier)
     }
-    
+
     /// Get all active integrations
     public func getActiveIntegrations() -> [String: any Integration] {
         return activeIntegrations
     }
-    
+
     /// Perform health checks on all active integrations
     public func healthCheckAll() async -> [String: HealthStatus] {
         var results: [String: HealthStatus] = [:]
-        
+
         for (identifier, integration) in activeIntegrations {
             do {
                 results[identifier] = try await integration.healthCheck()
@@ -96,15 +96,15 @@ public actor IntegrationRegistry: Sendable {
                 )
             }
         }
-        
+
         return results
     }
-    
+
     /// Check if an integration is available and registered
     public func isAvailable(identifier: String) -> Bool {
         return registeredIntegrations[identifier] != nil
     }
-    
+
     /// Check if an integration is currently active
     public func isActive(identifier: String) -> Bool {
         return activeIntegrations[identifier] != nil
@@ -119,7 +119,7 @@ public protocol IntegrationFactory: Sendable {
     var displayName: String { get }
     var version: String { get }
     var requiredPermissions: [Permission] { get }
-    
+
     func create(configuration: IntegrationConfiguration) async throws -> any Integration
 }
 
@@ -133,7 +133,7 @@ private struct ConcreteIntegrationFactory<T: Integration>: IntegrationFactory {
     let version: String
     let requiredPermissions: [Permission]
     private let builder: IntegrationFactoryBuilder<T>
-    
+
     init(
         identifier: String,
         displayName: String,
@@ -147,7 +147,7 @@ private struct ConcreteIntegrationFactory<T: Integration>: IntegrationFactory {
         self.requiredPermissions = requiredPermissions
         self.builder = builder
     }
-    
+
     func create(configuration: IntegrationConfiguration) async throws -> any Integration {
         return try await builder(configuration)
     }
@@ -161,7 +161,7 @@ public struct IntegrationMetadata: Sendable, Identifiable {
     public let version: String
     public let requiredPermissions: [Permission]
     public let isActive: Bool
-    
+
     public init(
         identifier: String,
         displayName: String,

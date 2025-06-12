@@ -9,7 +9,7 @@
 import SwiftUI
 
 /// Authentication view implementing secure sign-in flow
-/// 
+///
 /// Follows the cloudflare-hub security model where actual
 /// provider tokens never leave the user's development machine.
 /// The mobile app authenticates to CFHub cloud service.
@@ -17,7 +17,7 @@ struct AuthenticationView: View {
     @EnvironmentObject private var viewModel: AuthViewModel
     @State private var selectedProvider: AuthProvider?
     @State private var showingProviderAuth = false
-    
+
     var body: some View {
         NavigationView {
             VStack(spacing: 32) {
@@ -26,12 +26,12 @@ struct AuthenticationView: View {
                     Image(systemName: "cloud.bolt.circle.fill")
                         .font(.system(size: 80))
                         .foregroundColor(.blue)
-                    
+
                     VStack(spacing: 8) {
                         Text("CFHub Mobile")
                             .font(.largeTitle)
                             .fontWeight(.bold)
-                        
+
                         Text("Infrastructure management from anywhere")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
@@ -39,7 +39,7 @@ struct AuthenticationView: View {
                     }
                 }
                 .padding(.top, 40)
-                
+
                 // Features
                 VStack(spacing: 20) {
                     FeatureRow(
@@ -47,13 +47,13 @@ struct AuthenticationView: View {
                         title: "Secure by Design",
                         description: "Your API tokens never leave your development machine"
                     )
-                    
+
                     FeatureRow(
                         icon: "bolt.circle",
                         title: "Emergency Response",
                         description: "Handle deployment emergencies from anywhere"
                     )
-                    
+
                     FeatureRow(
                         icon: "cloud.bolt",
                         title: "Real-time Monitoring",
@@ -61,14 +61,14 @@ struct AuthenticationView: View {
                     )
                 }
                 .padding(.horizontal)
-                
+
                 Spacer()
-                
+
                 // Provider Selection
                 VStack(spacing: 16) {
                     Text("Connect your accounts")
                         .font(.headline)
-                    
+
                     VStack(spacing: 12) {
                         ForEach(viewModel.availableProviders) { provider in
                             ProviderButton(provider: provider) {
@@ -79,18 +79,18 @@ struct AuthenticationView: View {
                     }
                 }
                 .padding(.horizontal)
-                
+
                 // Security Notice
                 VStack(spacing: 8) {
                     HStack {
                         Image(systemName: "lock.shield")
                             .foregroundColor(.green)
-                        
+
                         Text("Your credentials are encrypted and stored securely")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
-                    
+
                     Text("CFHub uses a secure proxy model - your API tokens never leave your development environment")
                         .font(.caption2)
                         .foregroundColor(.secondary)
@@ -129,25 +129,25 @@ struct FeatureRow: View {
     let icon: String
     let title: String
     let description: String
-    
+
     var body: some View {
         HStack(spacing: 16) {
             Image(systemName: icon)
                 .font(.title2)
                 .foregroundColor(.blue)
                 .frame(width: 32, height: 32)
-            
+
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
                     .font(.headline)
                     .foregroundColor(.primary)
-                
+
                 Text(description)
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            
+
             Spacer()
         }
     }
@@ -157,7 +157,7 @@ struct FeatureRow: View {
 struct ProviderButton: View {
     let provider: AuthProvider
     let onTap: () -> Void
-    
+
     var body: some View {
         Button(action: onTap) {
             HStack(spacing: 16) {
@@ -165,20 +165,20 @@ struct ProviderButton: View {
                     .font(.title2)
                     .foregroundColor(.white)
                     .frame(width: 24, height: 24)
-                
+
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Connect to \(provider.displayName)")
                         .font(.headline)
                         .foregroundColor(.white)
-                    
+
                     Text(provider.description)
                         .font(.caption)
                         .foregroundColor(.white.opacity(0.8))
                         .lineLimit(1)
                 }
-                
+
                 Spacer()
-                
+
                 Image(systemName: "arrow.right")
                     .foregroundColor(.white)
             }
@@ -195,12 +195,12 @@ struct ProviderAuthenticationView: View {
     let provider: AuthProvider
     @EnvironmentObject private var viewModel: AuthViewModel
     @Environment(\.dismiss) private var dismiss
-    
+
     @State private var apiKey = ""
     @State private var email = ""
     @State private var token = ""
     @State private var isLoading = false
-    
+
     var body: some View {
         NavigationView {
             Form {
@@ -209,45 +209,45 @@ struct ProviderAuthenticationView: View {
                         HStack {
                             Image(systemName: provider.iconName)
                                 .foregroundColor(.blue)
-                            
+
                             Text(provider.displayName)
                                 .font(.headline)
                         }
-                        
+
                         Text(provider.description)
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                     }
                     .padding(.vertical, 8)
                 }
-                
+
                 Section("Credentials") {
                     switch provider.authType {
                     case .apiKey:
                         TextField("API Key", text: $apiKey)
                             .textContentType(.password)
-                        
+
                         TextField("Email (optional)", text: $email)
                             .textContentType(.emailAddress)
                             .autocapitalization(.none)
-                        
+
                     case .bearer, .oauth:
                         TextField("Access Token", text: $token)
                             .textContentType(.password)
                     }
                 }
-                
+
                 Section {
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
                             Image(systemName: "shield.checkered")
                                 .foregroundColor(.green)
-                            
+
                             Text("Security Notice")
                                 .font(.subheadline)
                                 .fontWeight(.medium)
                         }
-                        
+
                         Text("Your credentials are securely stored and encrypted. CFHub uses a proxy model where your actual API tokens remain on your development machine.")
                             .font(.caption)
                             .foregroundColor(.secondary)
@@ -263,7 +263,7 @@ struct ProviderAuthenticationView: View {
                         dismiss()
                     }
                 }
-                
+
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Connect") {
                         Task {
@@ -282,7 +282,7 @@ struct ProviderAuthenticationView: View {
             }
         }
     }
-    
+
     private var isFormValid: Bool {
         switch provider.authType {
         case .apiKey:
@@ -291,10 +291,10 @@ struct ProviderAuthenticationView: View {
             return !token.trimmingCharacters(in: .whitespaces).isEmpty
         }
     }
-    
+
     private func authenticateWithProvider() async {
         isLoading = true
-        
+
         let credentials: ProviderCredentials
         switch provider.authType {
         case .apiKey:
@@ -311,11 +311,11 @@ struct ProviderAuthenticationView: View {
                 value: token.trimmingCharacters(in: .whitespaces)
             ))
         }
-        
+
         await viewModel.signIn(with: provider, credentials: credentials)
-        
+
         isLoading = false
-        
+
         if viewModel.isAuthenticated {
             dismiss()
         }
@@ -330,11 +330,11 @@ struct DeploymentsView: View {
                 Image(systemName: "cloud.fill")
                     .font(.system(size: 64))
                     .foregroundColor(.blue)
-                
+
                 Text("Deployments")
                     .font(.title)
                     .fontWeight(.semibold)
-                
+
                 Text("Coming soon...")
                     .foregroundColor(.secondary)
             }
@@ -350,11 +350,11 @@ struct EnvironmentsView: View {
                 Image(systemName: "server.rack")
                     .font(.system(size: 64))
                     .foregroundColor(.green)
-                
+
                 Text("Environments")
                     .font(.title)
                     .fontWeight(.semibold)
-                
+
                 Text("Coming soon...")
                     .foregroundColor(.secondary)
             }
@@ -365,7 +365,7 @@ struct EnvironmentsView: View {
 
 struct SettingsView: View {
     @EnvironmentObject private var authViewModel: AuthViewModel
-    
+
     var body: some View {
         NavigationView {
             List {
@@ -380,11 +380,11 @@ struct SettingsView: View {
                                         .foregroundColor(.white)
                                         .fontWeight(.semibold)
                                 )
-                            
+
                             VStack(alignment: .leading) {
                                 Text(user.name)
                                     .font(.headline)
-                                
+
                                 Text(user.email)
                                     .font(.caption)
                                     .foregroundColor(.secondary)
@@ -393,25 +393,25 @@ struct SettingsView: View {
                         .padding(.vertical, 4)
                     }
                 }
-                
+
                 Section("Connected Providers") {
                     ForEach(Array(authViewModel.activeProviders), id: \.self) { providerId in
                         HStack {
                             Image(systemName: "checkmark.circle.fill")
                                 .foregroundColor(.green)
-                            
+
                             Text(providerId.capitalized)
-                            
+
                             Spacer()
                         }
                     }
-                    
+
                     if authViewModel.activeProviders.isEmpty {
                         Text("No providers connected")
                             .foregroundColor(.secondary)
                     }
                 }
-                
+
                 Section {
                     Button("Sign Out") {
                         Task {

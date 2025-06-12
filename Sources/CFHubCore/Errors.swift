@@ -9,7 +9,7 @@
 import Foundation
 
 /// Comprehensive error system for CFHub integrations
-/// 
+///
 /// Following Swift 6 error handling best practices with typed errors
 /// and detailed context for debugging and user feedback.
 public enum IntegrationError: Error, Sendable {
@@ -18,43 +18,43 @@ public enum IntegrationError: Error, Sendable {
     case tokenExpired
     case insufficientPermissions(required: [Permission])
     case rateLimited(retryAfter: TimeInterval?)
-    
+
     // Network Errors
     case networkUnavailable
     case requestTimeout(duration: TimeInterval)
     case serverError(statusCode: Int, message: String?)
     case invalidResponse(expected: String, received: String)
-    
+
     // Resource Errors
     case resourceNotFound(id: String, type: ResourceType)
     case resourceAlreadyExists(id: String, type: ResourceType)
     case resourceInInvalidState(id: String, currentState: ResourceStatus, requiredState: ResourceStatus)
     case resourceLocked(id: String, lockHolder: String?)
-    
+
     // Action Errors
     case actionNotSupported(action: ActionType, resourceType: ResourceType)
     case actionFailed(action: Action, underlyingError: String)
     case dependencyNotMet(actionId: String, missingDependency: String)
     case concurrentModification(resourceId: String)
-    
+
     // Configuration Errors
     case invalidConfiguration(field: String, reason: String)
     case missingRequiredField(field: String)
     case configurationConflict(field1: String, field2: String, reason: String)
-    
+
     // Validation Errors
     case validationFailed(errors: [ValidationError])
     case unsupportedOperation(operation: String, context: String)
     case quotaExceeded(resource: String, limit: Int, current: Int)
-    
+
     // Integration-Specific Errors
     case cloudflareError(code: String, message: String)
     case githubError(code: String, message: String)
-    
+
     // Generic Errors
     case unknown(message: String)
     case internalError(file: String, line: Int, function: String)
-    
+
     public var localizedDescription: String {
         switch self {
         case .authenticationFailed(let reason):
@@ -121,7 +121,7 @@ public enum IntegrationError: Error, Sendable {
             return "Internal error in \(function) at \(file):\(line)"
         }
     }
-    
+
     public var errorCode: String {
         switch self {
         case .authenticationFailed: return "AUTH_FAILED"
@@ -152,7 +152,7 @@ public enum IntegrationError: Error, Sendable {
         case .internalError: return "INTERNAL_ERROR"
         }
     }
-    
+
     public var isRetryable: Bool {
         switch self {
         case .networkUnavailable, .requestTimeout, .serverError, .rateLimited:
@@ -175,7 +175,7 @@ public enum IntegrationError: Error, Sendable {
             return false
         }
     }
-    
+
     public var severity: ErrorSeverity {
         switch self {
         case .authenticationFailed, .tokenExpired, .insufficientPermissions:
@@ -213,7 +213,7 @@ public struct ValidationError: Sendable, Codable {
     public let field: String
     public let message: String
     public let code: String?
-    
+
     public init(field: String, message: String, code: String? = nil) {
         self.field = field
         self.message = message
@@ -227,7 +227,7 @@ public enum ErrorSeverity: String, Sendable, Codable, CaseIterable {
     case medium = "medium"
     case high = "high"
     case critical = "critical"
-    
+
     public var priority: Int {
         switch self {
         case .low: return 1
@@ -250,7 +250,7 @@ extension IntegrationError {
     ) -> IntegrationError {
         return .authenticationFailed(reason: "\(reason) [\(function)]")
     }
-    
+
     /// Create an internal error with file/line context
     public static func internalFailure(
         message: String = "Unexpected error occurred",
@@ -260,7 +260,7 @@ extension IntegrationError {
     ) -> IntegrationError {
         return .internalError(file: file, line: line, function: function)
     }
-    
+
     /// Create a resource error with type safety
     public static func resourceError(
         _ error: ResourceErrorType,
