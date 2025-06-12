@@ -7,8 +7,8 @@
 //
 
 import CFHubCore
-@testable import CFHubGitHub
 import Testing
+@testable import CFHubGitHub
 
 @Test("GitHub integration has correct metadata")
 func testGitHubIntegrationMetadata() async throws {
