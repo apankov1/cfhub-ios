@@ -1,3 +1,11 @@
+//
+// Resource.swift
+// CFHub iOS
+//
+// 🤖 Generated with [Claude Code](https://claude.ai/code)
+// Co-Authored-By: Claude <noreply@anthropic.com>
+//
+
 import Foundation
 
 /// Core resource model following cloudflare-hub distributed types pattern

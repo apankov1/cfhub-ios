@@ -1,3 +1,11 @@
+//
+// Errors.swift
+// CFHub iOS
+//
+// 🤖 Generated with [Claude Code](https://claude.ai/code)
+// Co-Authored-By: Claude <noreply@anthropic.com>
+//
+
 import Foundation
 
 /// Comprehensive error system for CFHub integrations

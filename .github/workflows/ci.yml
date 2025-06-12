@@ -43,10 +43,10 @@ jobs:
     - name: Validate AI Attribution
       run: |
         echo "🤖 Checking AI attribution compliance..."
-        MISSING_ATTRIBUTION=$(find Sources -name "*.swift" ! -exec grep -l "🤖 Generated with" {} \; | wc -l | tr -d ' ')
-        if [ "$MISSING_ATTRIBUTION" -gt 0 ]; then
-          echo "❌ $MISSING_ATTRIBUTION Swift files missing AI attribution"
-          find Sources -name "*.swift" ! -exec grep -l "🤖 Generated with" {} \;
+        MISSING_FILES=$(find Sources -name "*.swift" | while read file; do if ! grep -q "🤖 Generated with" "$file"; then echo "$file"; fi; done)
+        if [ -n "$MISSING_FILES" ]; then
+          echo "❌ Swift files missing AI attribution:"
+          echo "$MISSING_FILES"
           exit 1
         else
           echo "✅ All Swift files have proper AI attribution"

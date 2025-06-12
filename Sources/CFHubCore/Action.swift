@@ -1,3 +1,11 @@
+//
+// Action.swift
+// CFHub iOS
+//
+// 🤖 Generated with [Claude Code](https://claude.ai/code)
+// Co-Authored-By: Claude <noreply@anthropic.com>
+//
+
 import Foundation
 
 /// Actions represent planned changes to infrastructure resources
