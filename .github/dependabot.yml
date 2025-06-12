@@ -20,9 +20,7 @@ updates:
     # Auto-merge strategy for security patches
     allow:
       - dependency-type: "direct"
-        update-type: "security"
       - dependency-type: "indirect"
-        update-type: "security"
     
     # Reviewers for dependency updates
     reviewers:
@@ -62,11 +60,6 @@ updates:
     
     allow:
       - dependency-type: "direct"
-        update-type: "security"
-      - dependency-type: "direct"
-        update-type: "version-update:semver-patch"
-      - dependency-type: "direct"
-        update-type: "version-update:semver-minor"
     
     labels:
       - "github-actions"
