@@ -45,9 +45,6 @@ class DashboardViewModel: ObservableObject {
         startPeriodicRefresh()
     }
 
-    deinit {
-        stopRealTimeUpdates()
-    }
 
     // MARK: - Public Methods
 

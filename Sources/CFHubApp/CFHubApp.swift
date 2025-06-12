@@ -50,6 +50,7 @@ struct CFHubApp: App {
 struct ContentView: View {
     @EnvironmentObject private var authViewModel: AuthViewModel
     @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var dashboardViewModel: DashboardViewModel
 
     var body: some View {
         Group {
@@ -67,6 +68,7 @@ struct ContentView: View {
             } else {
                 Task {
                     await appState.deactivateIntegrations()
+                    dashboardViewModel.stopRealTimeUpdates()
                 }
             }
         }
@@ -128,6 +130,10 @@ struct MainTabView: View {
         .task {
             // Start real-time updates when main view appears
             await dashboardViewModel.startRealTimeUpdates()
+        }
+        .onDisappear {
+            // Stop real-time updates when view disappears
+            dashboardViewModel.stopRealTimeUpdates()
         }
     }
 }
