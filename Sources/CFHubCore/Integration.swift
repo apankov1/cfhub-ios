@@ -67,7 +67,7 @@ public struct IntegrationConfiguration: Sendable {
 }
 
 /// Authentication methods for integrations
-public enum Authentication: Sendable {
+public enum Authentication: Sendable, Codable {
     case bearer(token: String)
     case oauth(accessToken: String, refreshToken: String?)
     case apiKey(key: String, secret: String?)
