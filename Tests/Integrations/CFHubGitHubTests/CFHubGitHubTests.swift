@@ -6,9 +6,9 @@
 // Co-Authored-By: Claude <noreply@anthropic.com>
 //
 
+@testable import CFHubGitHub
 import CFHubCore
 import Testing
-@testable import CFHubGitHub
 
 @Test("GitHub integration has correct metadata")
 func testGitHubIntegrationMetadata() async throws {
