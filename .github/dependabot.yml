@@ -1,0 +1,78 @@
+# CFHub iOS Dependency Management
+# Automated dependency updates with security focus
+# 🤖 Generated with [Claude Code](https://claude.ai/code)
+# Co-Authored-By: Claude <noreply@anthropic.com>
+
+version: 2
+updates:
+  # Swift Package Manager dependencies
+  - package-ecosystem: "swift"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Los_Angeles"
+    
+    # Security updates get priority
+    open-pull-requests-limit: 10
+    
+    # Auto-merge strategy for security patches
+    allow:
+      - dependency-type: "direct"
+        update-type: "security"
+      - dependency-type: "indirect"
+        update-type: "security"
+    
+    # Reviewers for dependency updates
+    reviewers:
+      - "maintainer-username"
+    
+    # Labels for dependency PRs
+    labels:
+      - "dependencies"
+      - "automated"
+      - "security"
+    
+    # Commit message configuration
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps-dev"
+      include: "scope"
+    
+    # Group related updates
+    groups:
+      swift-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    
+  # GitHub Actions dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "09:00"
+      timezone: "America/Los_Angeles"
+    
+    open-pull-requests-limit: 5
+    
+    allow:
+      - dependency-type: "direct"
+        update-type: "security"
+      - dependency-type: "direct"
+        update-type: "version-update:semver-patch"
+      - dependency-type: "direct"
+        update-type: "version-update:semver-minor"
+    
+    labels:
+      - "github-actions"
+      - "dependencies"
+      - "ci/cd"
+    
+    commit-message:
+      prefix: "ci"
+      include: "scope"

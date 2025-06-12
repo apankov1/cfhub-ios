@@ -1,0 +1,112 @@
+name: 🔌 New Integration Request
+description: Request support for a new service integration
+title: "[Integration]: Add support for "
+labels: ["integration", "enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Request a new service integration for CFHub iOS!
+        
+        **Integration-First Architecture**: Each integration is completely self-contained following our proven patterns.
+        
+  - type: input
+    id: service-name
+    attributes:
+      label: Service Name
+      description: What service would you like to integrate?
+      placeholder: e.g., AWS, Vercel, Netlify, etc.
+    validations:
+      required: true
+      
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: How would you use this integration in your infrastructure workflow?
+      placeholder: Describe the specific infrastructure management needs...
+    validations:
+      required: true
+      
+  - type: input
+    id: api-documentation
+    attributes:
+      label: API Documentation URL
+      description: Link to the service's API documentation
+      placeholder: https://...
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: auth-method
+    attributes:
+      label: Authentication Method
+      description: How does this service authenticate API requests?
+      options:
+        - API Key
+        - Bearer Token
+        - OAuth 2.0
+        - Basic Auth
+        - Custom/Other
+    validations:
+      required: true
+      
+  - type: textarea
+    id: resources
+    attributes:
+      label: Resource Types
+      description: What types of resources would this integration manage?
+      placeholder: |
+        e.g., for AWS:
+        - EC2 Instances
+        - S3 Buckets
+        - Lambda Functions
+        - etc.
+    validations:
+      required: true
+      
+  - type: textarea
+    id: permissions
+    attributes:
+      label: Required Permissions
+      description: What permissions/scopes would this integration need?
+      placeholder: List the minimum required permissions for core functionality
+      
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: Integration Complexity
+      description: How complex do you think this integration would be?
+      options:
+        - Simple (Basic CRUD operations)
+        - Medium (Some advanced features)
+        - Complex (Advanced features, complex authentication)
+    validations:
+      required: true
+      
+  - type: textarea
+    id: existing-tools
+    attributes:
+      label: Existing Tools/SDKs
+      description: Are there existing Swift SDKs or tools for this service?
+      placeholder: Links to official SDKs, community libraries, etc.
+      
+  - type: checkboxes
+    id: integration-requirements
+    attributes:
+      label: Integration Requirements
+      description: Please confirm you understand our integration standards
+      options:
+        - label: This integration will follow our self-contained architecture pattern
+          required: true
+        - label: This integration will use proxy authentication (no client-side credentials)
+          required: true
+        - label: This integration will implement the core Integration protocol
+          required: true
+        - label: I understand this will be implemented using AI-assisted development
+          required: true
+        - label: I can help test and validate the integration once implemented
+          required: true
+
+# 🤖 Generated with [Claude Code](https://claude.ai/code)
+# Co-Authored-By: Claude <noreply@anthropic.com>

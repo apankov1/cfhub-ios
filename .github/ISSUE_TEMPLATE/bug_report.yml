@@ -1,0 +1,83 @@
+name: 🐛 Bug Report
+description: Report a bug in CFHub iOS
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug! This helps us improve CFHub iOS for everyone.
+        
+        **Note**: This project follows Claude-first development practices with 85-90% AI-generated code.
+        
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear description of the bug
+      placeholder: Describe what happened and what you expected to happen
+    validations:
+      required: true
+      
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce this bug?
+      placeholder: |
+        1. Go to...
+        2. Click on...
+        3. See error...
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: integration
+    attributes:
+      label: Integration Affected
+      description: Which integration is affected by this bug?
+      options:
+        - CFHubCore
+        - CFHubClient  
+        - CFHubApp
+        - CFHubCloudflare
+        - CFHubGitHub
+        - Unknown/Multiple
+    validations:
+      required: true
+      
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Your development environment details
+      placeholder: |
+        - iOS Version: 
+        - Xcode Version:
+        - Swift Version:
+        - CFHub iOS Version:
+        - Device:
+    validations:
+      required: true
+      
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error Logs
+      description: Any relevant error messages or logs
+      render: text
+      
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have searched existing issues to avoid duplicates
+          required: true
+        - label: I have provided clear reproduction steps
+          required: true
+        - label: I understand this is an AI-assisted project following Claude-first practices
+          required: true
+
+# 🤖 Generated with [Claude Code](https://claude.ai/code)
+# Co-Authored-By: Claude <noreply@anthropic.com>

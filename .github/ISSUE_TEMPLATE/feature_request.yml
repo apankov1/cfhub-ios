@@ -1,0 +1,89 @@
+name: ✨ Feature Request
+description: Suggest a new feature for CFHub iOS
+title: "[Feature]: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a feature! CFHub iOS follows integration-first architecture.
+        
+        **AI Development Note**: This project uses Claude-first development practices. Features should align with our AI-assisted workflow.
+        
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: What problem does this feature solve?
+      placeholder: As a user, I want to... because...
+    validations:
+      required: true
+      
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How would you like this feature to work?
+      placeholder: Describe your ideal solution...
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: integration
+    attributes:
+      label: Integration Area
+      description: Which part of CFHub iOS would this affect?
+      options:
+        - CFHubCore (Core abstractions)
+        - CFHubClient (HTTP client)
+        - CFHubApp (UI/UX)
+        - CFHubCloudflare (Cloudflare integration)
+        - CFHubGitHub (GitHub integration)
+        - New Integration
+        - Cross-cutting (Multiple areas)
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority Level
+      description: How important is this feature to you?
+      options:
+        - Low (Nice to have)
+        - Medium (Would improve workflow)
+        - High (Critical for adoption)
+    validations:
+      required: true
+      
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative Solutions
+      description: Any alternative solutions or workarounds you've considered?
+      
+  - type: textarea
+    id: ai-considerations
+    attributes:
+      label: AI Development Considerations
+      description: |
+        How should this feature align with our Claude-first development practices?
+        Consider: AI implementation complexity, testing approach, documentation needs
+      
+  - type: checkboxes
+    id: architecture
+    attributes:
+      label: Architecture Alignment
+      description: Please confirm this feature aligns with our principles
+      options:
+        - label: This feature follows integration-first architecture
+          required: true
+        - label: This feature maintains security-first design (no client-side credentials)
+          required: true
+        - label: This feature is suitable for AI-assisted implementation
+          required: true
+        - label: I understand this is a Claude-first development project
+          required: true
+
+# 🤖 Generated with [Claude Code](https://claude.ai/code)
+# Co-Authored-By: Claude <noreply@anthropic.com>

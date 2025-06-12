@@ -1,0 +1,56 @@
+# CFHub iOS .gitignore
+# Swift Package Manager build artifacts and dependencies
+# 🤖 Generated with [Claude Code](https://claude.ai/code)
+# Co-Authored-By: Claude <noreply@anthropic.com>
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved
+*.xcworkspace
+DerivedData/
+
+# Xcode
+xcuserdata/
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcworkspace/contents.xcworkspacedata
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift
+*.swiftmodule
+*.swiftdoc
+*.swiftsourceinfo
+
+# Testing
+.coverage/
+*.profraw
+*.profdata
+coverage.lcov
+
+# Temporary files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# AI Development
+AI_CHEATSHEET.md
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local

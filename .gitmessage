@@ -1,0 +1,16 @@
+# CFHub iOS Commit Template
+# Following cloudflare-hub AI-assisted development standards
+#
+# Format: <type>(<scope>): <subject>
+#
+# Types: feat, fix, docs, style, refactor, test, chore
+# Scope: integration, core, ui, auth, etc.
+#
+# Example:
+# feat(core): implement integration registry pattern
+#
+# Extended description (optional)
+#
+# 🤖 Generated with [Claude Code](https://claude.ai/code)
+#
+# Co-Authored-By: Claude <noreply@anthropic.com>

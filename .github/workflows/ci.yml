@@ -1,0 +1,171 @@
+name: CFHub iOS CI/CD
+# Swift Package Manager CI with Claude-first quality gates
+# 🤖 Generated with [Claude Code](https://claude.ai/code)
+# Co-Authored-By: Claude <noreply@anthropic.com>
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  DEVELOPER_DIR: /Applications/Xcode.app/Contents/Developer
+  
+jobs:
+  quality-gates:
+    name: Quality Gates & Build
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Select Xcode Version
+      run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+      
+    - name: Show Xcode and Swift Versions
+      run: |
+        xcodebuild -version
+        swift --version
+        
+    - name: Cache Swift Package Manager
+      uses: actions/cache@v4
+      with:
+        path: .build
+        key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+        restore-keys: |
+          ${{ runner.os }}-spm-
+          
+    - name: Resolve Dependencies
+      run: swift package resolve
+      
+    - name: Validate AI Attribution
+      run: |
+        echo "🤖 Checking AI attribution compliance..."
+        MISSING_ATTRIBUTION=$(find Sources -name "*.swift" ! -exec grep -l "🤖 Generated with" {} \; | wc -l | tr -d ' ')
+        if [ "$MISSING_ATTRIBUTION" -gt 0 ]; then
+          echo "❌ $MISSING_ATTRIBUTION Swift files missing AI attribution"
+          find Sources -name "*.swift" ! -exec grep -l "🤖 Generated with" {} \;
+          exit 1
+        else
+          echo "✅ All Swift files have proper AI attribution"
+        fi
+        
+    - name: SwiftLint
+      run: |
+        if command -v swiftlint &> /dev/null; then
+          ./scripts/lint.sh
+        else
+          echo "⚠️ SwiftLint not available on CI - installing..."
+          brew install swiftlint
+          ./scripts/lint.sh
+        fi
+        
+    - name: Build All Packages
+      run: swift build --configuration release
+      
+    - name: Run Tests
+      run: swift test --configuration release --enable-code-coverage
+      
+    - name: Generate Test Coverage
+      run: |
+        xcrun llvm-cov export .build/release/CFHubPackageTests.xctest/Contents/MacOS/CFHubPackageTests \
+          --format="lcov" \
+          --instr-profile .build/release/codecov/default.profdata > coverage.lcov
+        
+    - name: Upload Coverage
+      uses: codecov/codecov-action@v4
+      with:
+        file: coverage.lcov
+        flags: swift
+        name: CFHub iOS Coverage
+        
+    - name: Validate Integration Architecture
+      run: |
+        echo "🏗️ Validating integration-first architecture..."
+        INTEGRATION_COUNT=$(find Sources/Integrations -maxdepth 1 -type d -name "CFHub*" | wc -l | tr -d ' ')
+        if [ "$INTEGRATION_COUNT" -gt 0 ]; then
+          echo "✅ Integration-first architecture verified ($INTEGRATION_COUNT integrations)"
+        else
+          echo "⚠️ No integrations found - this may be expected for early development"
+        fi
+        
+    - name: Security Audit
+      run: |
+        echo "🔒 Running security audit..."
+        # Check for potential secret leakage
+        if grep -r "sk_" Sources/ || grep -r "pk_" Sources/ || grep -r "token.*=" Sources/; then
+          echo "❌ Potential secrets found in source code"
+          exit 1
+        else
+          echo "✅ No hardcoded secrets detected"
+        fi
+        
+    - name: Generate Build Artifacts
+      if: github.ref == 'refs/heads/main'
+      run: |
+        swift build --configuration release
+        # Archive build for potential deployment
+        tar -czf cfhub-ios-build.tar.gz .build/release/
+        
+    - name: Upload Build Artifacts
+      if: github.ref == 'refs/heads/main'
+      uses: actions/upload-artifact@v4
+      with:
+        name: cfhub-ios-build
+        path: cfhub-ios-build.tar.gz
+        retention-days: 30
+        
+  ai-metrics:
+    name: AI Development Metrics
+    runs-on: ubuntu-latest
+    needs: quality-gates
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Calculate AI Contribution Metrics
+      run: |
+        echo "📊 Calculating AI development metrics..."
+        
+        TOTAL_SWIFT_FILES=$(find Sources -name "*.swift" | wc -l)
+        AI_ATTRIBUTED_FILES=$(find Sources -name "*.swift" -exec grep -l "🤖 Generated with" {} \; | wc -l)
+        
+        if [ "$TOTAL_SWIFT_FILES" -gt 0 ]; then
+          AI_PERCENTAGE=$((AI_ATTRIBUTED_FILES * 100 / TOTAL_SWIFT_FILES))
+          echo "📈 AI Contribution: $AI_PERCENTAGE% ($AI_ATTRIBUTED_FILES/$TOTAL_SWIFT_FILES files)"
+          
+          # Create metrics badge data
+          echo "AI_PERCENTAGE=$AI_PERCENTAGE" >> $GITHUB_ENV
+          echo "AI_FILES=$AI_ATTRIBUTED_FILES" >> $GITHUB_ENV
+          echo "TOTAL_FILES=$TOTAL_SWIFT_FILES" >> $GITHUB_ENV
+        fi
+        
+    - name: Comment AI Metrics on PR
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const aiPercentage = process.env.AI_PERCENTAGE;
+          const aiFiles = process.env.AI_FILES;
+          const totalFiles = process.env.TOTAL_FILES;
+          
+          if (aiPercentage) {
+            const body = `## 🤖 AI Development Metrics
+            
+            **AI Contribution**: ${aiPercentage}% (${aiFiles}/${totalFiles} files)
+            
+            This pull request maintains our Claude-first development standards with proper AI attribution.
+            
+            ---
+            *🤖 Generated with [Claude Code](https://claude.ai/code)*`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+          }

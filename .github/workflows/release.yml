@@ -1,0 +1,165 @@
+name: CFHub iOS Release
+# Automated release workflow with Claude-first practices
+# 🤖 Generated with [Claude Code](https://claude.ai/code)
+# Co-Authored-By: Claude <noreply@anthropic.com>
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+env:
+  DEVELOPER_DIR: /Applications/Xcode.app/Contents/Developer
+
+jobs:
+  validate-release:
+    name: Validate Release Candidate
+    runs-on: macos-latest
+    
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Extract Version
+      id: version
+      run: |
+        VERSION=${GITHUB_REF#refs/tags/v}
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Release version: $VERSION"
+        
+    - name: Select Xcode Version
+      run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+      
+    - name: Run Full Quality Gates
+      run: ./scripts/validate-standards.sh
+      
+    - name: Build Release Configuration
+      run: swift build --configuration release
+      
+    - name: Run All Tests
+      run: swift test --configuration release
+      
+    - name: Validate AI Attribution Compliance
+      run: |
+        echo "🤖 Validating AI attribution for release..."
+        MISSING_ATTRIBUTION=$(find Sources -name "*.swift" ! -exec grep -l "🤖 Generated with" {} \; | wc -l | tr -d ' ')
+        if [ "$MISSING_ATTRIBUTION" -gt 0 ]; then
+          echo "❌ Release blocked: $MISSING_ATTRIBUTION files missing AI attribution"
+          exit 1
+        fi
+        
+        AI_FILES=$(find Sources -name "*.swift" -exec grep -l "🤖 Generated with" {} \; | wc -l)
+        TOTAL_FILES=$(find Sources -name "*.swift" | wc -l)
+        AI_PERCENTAGE=$((AI_FILES * 100 / TOTAL_FILES))
+        
+        echo "✅ AI Attribution: $AI_PERCENTAGE% ($AI_FILES/$TOTAL_FILES files)"
+        echo "AI_PERCENTAGE=$AI_PERCENTAGE" >> $GITHUB_ENV
+        
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: validate-release
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Generate Release Notes
+      id: release-notes
+      run: |
+        echo "Generating Claude-first release notes..."
+        
+        # Extract changes since last tag
+        LAST_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+        if [ -n "$LAST_TAG" ]; then
+          CHANGES=$(git log --oneline --pretty=format:"- %s" $LAST_TAG..HEAD)
+        else
+          CHANGES=$(git log --oneline --pretty=format:"- %s" HEAD)
+        fi
+        
+        # Count AI-attributed commits
+        AI_COMMITS=$(git log --grep="🤖 Generated with" --oneline $LAST_TAG..HEAD | wc -l)
+        TOTAL_COMMITS=$(git log --oneline $LAST_TAG..HEAD | wc -l)
+        
+        if [ "$TOTAL_COMMITS" -gt 0 ]; then
+          AI_COMMIT_PERCENTAGE=$((AI_COMMITS * 100 / TOTAL_COMMITS))
+        else
+          AI_COMMIT_PERCENTAGE=0
+        fi
+        
+        # Generate release body
+        cat > release_notes.md << EOF
+        ## CFHub iOS v${{ needs.validate-release.outputs.version }}
+        
+        ### 🚀 What's New
+        
+        $CHANGES
+        
+        ### 🤖 AI Development Metrics
+        
+        - **AI-Assisted Commits**: ${AI_COMMIT_PERCENTAGE}% (${AI_COMMITS}/${TOTAL_COMMITS} commits)
+        - **Code Attribution**: Following Claude-first development practices
+        - **Quality Gates**: All automated quality checks passed
+        
+        ### 📱 Installation
+        
+        Add CFHub iOS to your Swift Package Manager dependencies:
+        
+        \`\`\`swift
+        dependencies: [
+            .package(url: "https://github.com/username/cfhub-ios.git", from: "${{ needs.validate-release.outputs.version }}")
+        ]
+        \`\`\`
+        
+        ### 🏗️ Architecture
+        
+        This release maintains our integration-first architecture with the following modules:
+        - **CFHubCore**: Core abstractions and protocols
+        - **CFHubClient**: HTTP client with Swift concurrency
+        - **CFHubApp**: SwiftUI application layer
+        - **Integrations**: Self-contained service integrations
+        
+        ### 🔒 Security
+        
+        - All API communications use secure proxy authentication
+        - No credentials stored in client applications
+        - Swift 6 concurrency compliance for safe concurrent operations
+        
+        ### 🧪 Testing
+        
+        - Full test suite coverage across all modules
+        - Integration tests for all supported services
+        - Quality gates enforce 95%+ test coverage
+        
+        ---
+        
+        **🤖 Generated with [Claude Code](https://claude.ai/code)**
+        
+        **Co-Authored-By: Claude <noreply@anthropic.com>**
+        EOF
+        
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: CFHub iOS v${{ needs.validate-release.outputs.version }}
+        body_path: release_notes.md
+        draft: false
+        prerelease: ${{ contains(needs.validate-release.outputs.version, '-') }}
+        generate_release_notes: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+  notify-release:
+    name: Notify Release
+    runs-on: ubuntu-latest
+    needs: [validate-release, create-release]
+    
+    steps:
+    - name: Release Notification
+      run: |
+        echo "🎉 CFHub iOS v${{ needs.validate-release.outputs.version }} released successfully!"
+        echo "📦 Release includes AI-assisted development with proper attribution"
+        echo "🔗 GitHub Release: https://github.com/${{ github.repository }}/releases/tag/v${{ needs.validate-release.outputs.version }}"
