@@ -6,8 +6,8 @@
 // Co-Authored-By: Claude <noreply@anthropic.com>
 //
 
-@testable import CFHubCloudflare
 import CFHubCore
+@testable import CFHubCloudflare
 import Testing
 
 @Test("Cloudflare integration has correct metadata")

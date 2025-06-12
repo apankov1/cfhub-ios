@@ -6,8 +6,8 @@
 // Co-Authored-By: Claude <noreply@anthropic.com>
 //
 
-@testable import CFHubGitHub
 import CFHubCore
+@testable import CFHubGitHub
 import Testing
 
 @Test("GitHub integration has correct metadata")
