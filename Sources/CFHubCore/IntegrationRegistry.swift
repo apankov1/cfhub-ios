@@ -13,7 +13,7 @@ import Foundation
 /// This follows the plugin discovery pattern from cloudflare-hub,
 /// allowing the core system to dynamically discover and instantiate
 /// integrations without tight coupling.
-public actor IntegrationRegistry: Sendable {
+public actor IntegrationRegistry {
     private var registeredIntegrations: [String: any IntegrationFactory] = [:]
     private var activeIntegrations: [String: any Integration] = [:]
 
@@ -38,7 +38,7 @@ public actor IntegrationRegistry: Sendable {
 
     /// Get all registered integration metadata
     public func getRegisteredIntegrations() -> [IntegrationMetadata] {
-        return registeredIntegrations.values.map { factory in
+        registeredIntegrations.values.map { factory in
             IntegrationMetadata(
                 identifier: factory.identifier,
                 displayName: factory.displayName,
@@ -69,7 +69,7 @@ public actor IntegrationRegistry: Sendable {
 
     /// Get an active integration
     public func getIntegration(identifier: String) -> (any Integration)? {
-        return activeIntegrations[identifier]
+        activeIntegrations[identifier]
     }
 
     /// Deactivate an integration
@@ -79,7 +79,7 @@ public actor IntegrationRegistry: Sendable {
 
     /// Get all active integrations
     public func getActiveIntegrations() -> [String: any Integration] {
-        return activeIntegrations
+        activeIntegrations
     }
 
     /// Perform health checks on all active integrations
@@ -102,12 +102,12 @@ public actor IntegrationRegistry: Sendable {
 
     /// Check if an integration is available and registered
     public func isAvailable(identifier: String) -> Bool {
-        return registeredIntegrations[identifier] != nil
+        registeredIntegrations[identifier] != nil
     }
 
     /// Check if an integration is currently active
     public func isActive(identifier: String) -> Bool {
-        return activeIntegrations[identifier] != nil
+        activeIntegrations[identifier] != nil
     }
 }
 
@@ -149,7 +149,7 @@ private struct ConcreteIntegrationFactory<T: Integration>: IntegrationFactory {
     }
 
     func create(configuration: IntegrationConfiguration) async throws -> any Integration {
-        return try await builder(configuration)
+        try await builder(configuration)
     }
 }
 
@@ -179,7 +179,6 @@ public struct IntegrationMetadata: Sendable, Identifiable {
 }
 
 // MARK: - Integration Registration Helper
-
 
 // MARK: - Default Integration Registration
 

@@ -74,7 +74,6 @@ public enum Authentication: Sendable {
     case none
 }
 
-
 /// Permissions required by integrations
 public struct Permission: Sendable, Hashable {
     public let scope: String
@@ -90,9 +89,9 @@ public struct Permission: Sendable, Hashable {
 
 /// Permission levels
 public enum PermissionLevel: String, Sendable, CaseIterable {
-    case read = "read"
-    case write = "write"
-    case admin = "admin"
+    case read
+    case write
+    case admin
 }
 
 /// Result of applying actions

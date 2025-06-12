@@ -13,7 +13,7 @@ import Foundation
 /// This follows the cloudflare-hub pattern of having a shared client
 /// that all integrations use, ensuring consistent behavior across
 /// all service integrations.
-public actor HTTPClient: Sendable {
+public actor HTTPClient {
     private let session: URLSession
     private let baseURL: URL
     private let defaultHeaders: [String: String]
@@ -129,7 +129,7 @@ public actor HTTPClient: Sendable {
         queryParameters: [String: String],
         headers: [String: String]
     ) throws -> URLRequest {
-        return try buildRequest(
+        try buildRequest(
             method: method,
             path: path,
             queryParameters: queryParameters,
@@ -233,7 +233,6 @@ public actor HTTPClient: Sendable {
 
             } catch {
                 lastError = error
-
                 // Don't retry for certain errors
                 if !shouldRetry(error: error, attempt: attempt) {
                     throw error
@@ -279,13 +278,13 @@ public actor HTTPClient: Sendable {
 
 /// HTTP method enumeration
 public enum HTTPMethod: String, Sendable, CaseIterable {
-    case GET = "GET"
-    case POST = "POST"
-    case PUT = "PUT"
-    case PATCH = "PATCH"
-    case DELETE = "DELETE"
-    case HEAD = "HEAD"
-    case OPTIONS = "OPTIONS"
+    case GET
+    case POST
+    case PUT
+    case PATCH
+    case DELETE
+    case HEAD
+    case OPTIONS
 }
 
 /// HTTP response wrapper
@@ -303,15 +302,15 @@ public struct HTTPResponse<T: Codable & Sendable>: Sendable {
     }
 
     public var isSuccessful: Bool {
-        return (200...299).contains(statusCode)
+        (200...299).contains(statusCode)
     }
 
     public var isClientError: Bool {
-        return (400...499).contains(statusCode)
+        (400...499).contains(statusCode)
     }
 
     public var isServerError: Bool {
-        return (500...599).contains(statusCode)
+        (500...599).contains(statusCode)
     }
 }
 

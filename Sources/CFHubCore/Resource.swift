@@ -106,14 +106,14 @@ public enum ResourceType: String, Sendable, Codable, CaseIterable {
 
 /// Resource status across all types
 public enum ResourceStatus: String, Sendable, Codable, CaseIterable {
-    case creating = "creating"
-    case active = "active"
-    case updating = "updating"
-    case deleting = "deleting"
-    case deleted = "deleted"
-    case failed = "failed"
-    case suspended = "suspended"
-    case unknown = "unknown"
+    case creating
+    case active
+    case updating
+    case deleting
+    case deleted
+    case failed
+    case suspended
+    case unknown
 
     public var isHealthy: Bool {
         switch self {
