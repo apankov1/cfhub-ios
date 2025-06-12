@@ -45,7 +45,6 @@ class DashboardViewModel: ObservableObject {
         startPeriodicRefresh()
     }
 
-
     // MARK: - Public Methods
 
     /// Start real-time updates for the dashboard

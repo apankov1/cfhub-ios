@@ -154,7 +154,7 @@ class AppState: ObservableObject {
         startHealthCheckTimer()
         isInitialized = true
     }
-    
+
     func cleanup() {
         stopHealthCheckTimer()
     }
@@ -206,7 +206,7 @@ class AppState: ObservableObject {
             }
         }
     }
-    
+
     func stopHealthCheckTimer() {
         healthCheckTimer?.invalidate()
         healthCheckTimer = nil

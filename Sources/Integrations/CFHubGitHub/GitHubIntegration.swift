@@ -52,7 +52,10 @@ public actor GitHubIntegration: Integration {
         }
 
         guard let baseURL = URL(string: configuration.baseURL) else {
-            throw IntegrationError.invalidConfiguration(field: "baseURL", reason: "Invalid base URL: \(configuration.baseURL)")
+            throw IntegrationError.invalidConfiguration(
+                field: "baseURL",
+                reason: "Invalid base URL: \(configuration.baseURL)"
+            )
         }
 
         self.client = HTTPClient(
@@ -379,7 +382,7 @@ struct GitHubRepository: Codable {
     let createdAt: String
     let updatedAt: String
     let pushedAt: String?
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case name
@@ -414,7 +417,7 @@ struct GitHubDeployment: Codable {
     let updatedAt: String
     let statusesUrl: String
     let repositoryUrl: String
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case sha
@@ -439,7 +442,7 @@ struct GitHubDeploymentStatus: Codable {
     let updatedAt: String
     let deploymentUrl: String
     let repositoryUrl: String
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case state
@@ -461,7 +464,7 @@ struct GitHubEnvironment: Codable {
     let updatedAt: String
     let protectionRules: [GitHubEnvironmentProtectionRule]?
     let deploymentBranchPolicy: GitHubDeploymentBranchPolicy?
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case name
@@ -479,7 +482,7 @@ struct GitHubEnvironmentProtectionRule: Codable {
     let type: String
     let waitTimer: Int?
     let reviewers: [GitHubEnvironmentReviewer]?
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case type
@@ -496,7 +499,7 @@ struct GitHubEnvironmentReviewer: Codable {
 struct GitHubDeploymentBranchPolicy: Codable {
     let protectedBranches: Bool
     let customBranchPolicies: Bool
-    
+
     enum CodingKeys: String, CodingKey {
         case protectedBranches = "protected_branches"
         case customBranchPolicies = "custom_branch_policies"
@@ -513,7 +516,7 @@ struct GitHubWorkflow: Codable {
     let url: String
     let htmlUrl: String
     let badgeUrl: String
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case name
@@ -540,7 +543,7 @@ struct GitHubWorkflowRun: Codable {
     let createdAt: String
     let updatedAt: String
     let runStartedAt: String?
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case name

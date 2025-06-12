@@ -301,9 +301,10 @@ struct ProviderAuthenticationView: View {
         let credentials: ProviderCredentials
         switch provider.authType {
         case .apiKey:
+            let trimmedEmail = email.trimmingCharacters(in: .whitespaces)
             credentials = ProviderCredentials(type: .apiKey(
                 key: apiKey.trimmingCharacters(in: .whitespaces),
-                email: email.trimmingCharacters(in: .whitespaces).isEmpty ? nil : email.trimmingCharacters(in: .whitespaces)
+                email: trimmedEmail.isEmpty ? nil : trimmedEmail
             ))
         case .bearer:
             credentials = ProviderCredentials(type: .token(

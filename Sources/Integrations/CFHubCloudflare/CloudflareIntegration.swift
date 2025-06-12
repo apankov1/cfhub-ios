@@ -52,7 +52,10 @@ public actor CloudflareIntegration: Integration {
         }
 
         guard let baseURL = URL(string: configuration.baseURL) else {
-            throw IntegrationError.invalidConfiguration(field: "baseURL", reason: "Invalid base URL: \(configuration.baseURL)")
+            throw IntegrationError.invalidConfiguration(
+                field: "baseURL", 
+                reason: "Invalid base URL: \(configuration.baseURL)"
+            )
         }
 
         self.client = HTTPClient(

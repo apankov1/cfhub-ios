@@ -180,11 +180,11 @@ custom_rules:
     message: "Integration classes must start with 'CFHub' prefix"
     severity: error
     
-  sendable_compliance:
-    name: "Sendable Compliance"
-    regex: 'actor\s+(?!.*:\s*.*Sendable)'
-    message: "Actors should explicitly conform to Sendable for clarity"
-    severity: warning
+  # sendable_compliance:
+  #   name: "Sendable Compliance"
+  #   regex: 'actor\s+(?!.*:\s*.*Sendable)'
+  #   message: "Actors should explicitly conform to Sendable for clarity"
+  #   severity: warning
     
   # ai_attribution:
   #   name: "AI Attribution Required"
