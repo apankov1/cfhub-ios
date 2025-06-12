@@ -32,7 +32,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-testing.git", from: "0.4.0")
+        .package(url: "https://github.com/apple/swift-testing.git", from: "6.1.1")
     ],
     targets: [
         // MARK: - Main App Target
