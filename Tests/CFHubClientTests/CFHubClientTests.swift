@@ -6,8 +6,8 @@
 // Co-Authored-By: Claude <noreply@anthropic.com>
 //
 
-import Testing
 @testable import CFHubClient
+import Testing
 
 @Test("HTTP client initializes with correct configuration")
 func testHTTPClientInitialization() async throws {
@@ -17,7 +17,7 @@ func testHTTPClientInitialization() async throws {
         defaultHeaders: ["User-Agent": "CFHub-iOS-Test"],
         timeout: 30.0
     )
-    
+
     // Basic smoke test - client should initialize without errors
     #expect(client != nil)
 }
@@ -25,7 +25,7 @@ func testHTTPClientInitialization() async throws {
 @Test("Retry policy has correct default values")
 func testRetryPolicyDefaults() async throws {
     let policy = RetryPolicy.default
-    
+
     #expect(policy.maxAttempts == 3)
     #expect(policy.initialDelay == 1.0)
     #expect(policy.backoffMultiplier == 2.0)

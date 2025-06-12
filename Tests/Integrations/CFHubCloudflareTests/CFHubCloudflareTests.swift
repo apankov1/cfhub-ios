@@ -6,8 +6,8 @@
 // Co-Authored-By: Claude <noreply@anthropic.com>
 //
 
-import Testing
 @testable import CFHubCloudflare
+import Testing
 import CFHubCore
 
 @Test("Cloudflare integration has correct metadata")
@@ -24,7 +24,7 @@ func testCloudflareIntegrationRequiresAuth() async throws {
         baseURL: "https://api.cloudflare.com/client/v4",
         authentication: .none
     )
-    
+
     do {
         _ = try await CloudflareIntegration(configuration: invalidConfig)
         #expect(Bool(false), "Should throw authentication error")

@@ -6,9 +6,9 @@
 // Co-Authored-By: Claude <noreply@anthropic.com>
 //
 
-import Testing
 @testable import CFHubGitHub
 import CFHubCore
+import Testing
 
 @Test("GitHub integration has correct metadata")
 func testGitHubIntegrationMetadata() async throws {
@@ -24,7 +24,7 @@ func testGitHubIntegrationRequiresAuth() async throws {
         baseURL: "https://api.github.com",
         authentication: .none
     )
-    
+
     do {
         _ = try await GitHubIntegration(configuration: invalidConfig)
         #expect(Bool(false), "Should throw authentication error")

@@ -6,8 +6,8 @@
 // Co-Authored-By: Claude <noreply@anthropic.com>
 //
 
-import Testing
 @testable import CFHubCore
+import Testing
 
 @Test("Resource can be created with basic properties")
 func testResourceCreation() async throws {
@@ -18,7 +18,7 @@ func testResourceCreation() async throws {
         status: .active,
         configuration: ResourceConfiguration()
     )
-    
+
     #expect(resource.id == "test-id")
     #expect(resource.type == .cloudflarePages)
     #expect(resource.status == .active)
@@ -32,7 +32,7 @@ func testActionCreation() async throws {
         resourceType: .githubRepository,
         operation: .createResource(configuration: ResourceConfiguration())
     )
-    
+
     #expect(action.type == .create)
     #expect(action.resourceId == "resource-123")
     #expect(action.resourceType == .githubRepository)
@@ -42,7 +42,7 @@ func testActionCreation() async throws {
 func testIntegrationRegistry() async throws {
     let registry = IntegrationRegistry.shared
     let integrations = await registry.getRegisteredIntegrations()
-    
+
     // Initially empty
     #expect(integrations.isEmpty)
 }

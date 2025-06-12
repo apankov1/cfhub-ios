@@ -14,7 +14,7 @@ import Foundation
 ///
 /// Self-contained integration following cloudflare-hub patterns.
 /// Owns all Cloudflare-specific types, API calls, and business logic.
-public actor CloudflareIntegration: Integration {
+public actor CloudflareIntegration: Integration, Sendable {
     public static let identifier = "cloudflare"
     public static let displayName = "Cloudflare"
     public static let version = "1.0.0"
@@ -44,7 +44,7 @@ public actor CloudflareIntegration: Integration {
         switch configuration.authentication {
         case .bearer(let token):
             headers["Authorization"] = "Bearer \(token)"
-        case .apiKey(let key, let email):
+        case let .apiKey(key, email):
             headers["X-Auth-Email"] = email ?? ""
             headers["X-Auth-Key"] = key
         default:

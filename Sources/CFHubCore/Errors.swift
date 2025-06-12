@@ -249,10 +249,10 @@ public struct ValidationError: Sendable, Codable {
 
 /// Error severity levels
 public enum ErrorSeverity: String, Sendable, Codable, CaseIterable {
-    case low = "low"
-    case medium = "medium"
-    case high = "high"
-    case critical = "critical"
+    case low
+    case medium
+    case high
+    case critical
 
     public var priority: Int {
         switch self {

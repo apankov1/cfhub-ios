@@ -48,18 +48,18 @@ public struct Action: Sendable, Codable, Identifiable {
 
 /// Types of actions that can be performed
 public enum ActionType: String, Sendable, Codable, CaseIterable {
-    case create = "create"
-    case update = "update"
-    case delete = "delete"
-    case deploy = "deploy"
-    case rollback = "rollback"
-    case scale = "scale"
-    case restart = "restart"
-    case pause = "pause"
-    case resume = "resume"
-    case migrate = "migrate"
-    case backup = "backup"
-    case restore = "restore"
+    case create
+    case update
+    case delete
+    case deploy
+    case rollback
+    case scale
+    case restart
+    case pause
+    case resume
+    case migrate
+    case backup
+    case restore
 
     public var isDestructive: Bool {
         switch self {
@@ -304,7 +304,7 @@ public struct DNSRecord: Sendable, Codable {
 
 /// DNS record types
 public enum DNSRecordType: String, Sendable, Codable, CaseIterable {
-    case a = "A"
+    case aRecord = "A"
     case aaaa = "AAAA"
     case cname = "CNAME"
     case mx = "MX"

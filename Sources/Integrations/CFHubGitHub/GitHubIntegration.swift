@@ -14,7 +14,7 @@ import Foundation
 ///
 /// Self-contained integration following cloudflare-hub patterns.
 /// Owns all GitHub-specific types, API calls, and business logic.
-public actor GitHubIntegration: Integration {
+public actor GitHubIntegration: Integration, Sendable {
     public static let identifier = "github"
     public static let displayName = "GitHub"
     public static let version = "1.0.0"
