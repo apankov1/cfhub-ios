@@ -84,8 +84,6 @@ opt_in_rules:
 # Disabled rules (these conflict with our patterns)
 disabled_rules:
   - todo # We allow TODO comments
-  - force_cast # Forbidden in sources, allowed in tests
-  - force_unwrapping # Forbidden in sources, allowed in tests
 
 # Custom rule configurations
 file_header:
@@ -132,7 +130,7 @@ nesting:
   type_level:
     warning: 2
     error: 3
-  statement_level:
+  function_level:
     warning: 5
     error: 10
 
@@ -162,13 +160,11 @@ type_name:
     warning: 40
     error: 60
 
-# Force unwrapping - strict rules
-force_unwrapping:
-  severity: error
-
-# Force cast - strict rules  
-force_cast:
-  severity: error
+# Force unwrapping and cast - handled by custom rules
+# force_unwrapping:
+#   severity: error
+# force_cast:
+#   severity: error
 
 # Custom rules for CFHub patterns
 custom_rules:
