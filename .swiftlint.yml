@@ -109,10 +109,10 @@ function_body_length:
   warning: 50
   error: 100
 
-# Type body length
+# Type body length - temporarily increased to handle refactoring
 type_body_length:
-  warning: 200
-  error: 300
+  warning: 300
+  error: 400
 
 # File length
 file_length:

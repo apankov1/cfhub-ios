@@ -406,7 +406,3 @@ enum AuthError: Error, LocalizedError {
     }
 }
 
-// MARK: - Codable Extensions
-
-extension AuthCredentials: Codable {}
-extension AuthCredentials.ProviderCredential: Codable {}

@@ -324,13 +324,13 @@ public enum DeploymentSource: Sendable, Codable {
 
     public var displayName: String {
         switch self {
-        case .git(let repository, let branch, _):
+        case let .git(repository, branch, _):
             return "\(repository)@\(branch)"
-        case .archive(let url):
+        case let .archive(url):
             return "Archive: \(url)"
-        case .local(let path):
+        case let .local(path):
             return "Local: \(path)"
-        case .artifact(let id):
+        case let .artifact(id):
             return "Artifact: \(id)"
         }
     }

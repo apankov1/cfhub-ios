@@ -14,7 +14,7 @@ import Foundation
 ///
 /// Self-contained integration following cloudflare-hub patterns.
 /// Owns all GitHub-specific types, API calls, and business logic.
-public actor GitHubIntegration: Integration, Sendable {
+public actor GitHubIntegration: Integration {
     public static let identifier = "github"
     public static let displayName = "GitHub"
     public static let version = "1.0.0"
@@ -52,7 +52,7 @@ public actor GitHubIntegration: Integration, Sendable {
         }
 
         guard let baseURL = URL(string: configuration.baseURL) else {
-            throw IntegrationError.invalidConfiguration(reason: "Invalid base URL: \(configuration.baseURL)")
+            throw IntegrationError.invalidConfiguration(field: "baseURL", reason: "Invalid base URL: \(configuration.baseURL)")
         }
 
         self.client = HTTPClient(
@@ -75,7 +75,9 @@ public actor GitHubIntegration: Integration, Sendable {
         async let environments = getGitHubEnvironments()
 
         do {
-            let (reposResult, deploymentsResult, environmentsResult) = try await (repositories, deployments, environments)
+            let (reposResult, deploymentsResult, environmentsResult) = try await (
+                repositories, deployments, environments
+            )
             resources.append(contentsOf: reposResult)
             resources.append(contentsOf: deploymentsResult)
             resources.append(contentsOf: environmentsResult)
@@ -195,10 +197,10 @@ public actor GitHubIntegration: Integration, Sendable {
                 name: repo.name,
                 status: repo.archived ? .suspended : .active,
                 configuration: ResourceConfiguration([
-                    "full_name": ConfigurationValue(repo.full_name),
+                    "full_name": ConfigurationValue(repo.fullName),
                     "private": ConfigurationValue(repo.`private`),
-                    "default_branch": ConfigurationValue(repo.default_branch),
-                    "clone_url": ConfigurationValue(repo.clone_url),
+                    "default_branch": ConfigurationValue(repo.defaultBranch),
+                    "clone_url": ConfigurationValue(repo.cloneUrl),
                     "language": ConfigurationValue(repo.language ?? "")
                 ]),
                 metadata: ResourceMetadata(
@@ -216,13 +218,13 @@ public actor GitHubIntegration: Integration, Sendable {
     private func getGitHubDeployments() async throws -> [Resource] {
         // In a real implementation, we'd get deployments for specific repositories
         // For now, return empty array as this requires repository context
-        return []
+        []
     }
 
     private func getGitHubEnvironments() async throws -> [Resource] {
         // In a real implementation, we'd get environments for specific repositories
         // For now, return empty array as this requires repository context
-        return []
+        []
     }
 
     private func getRepositoryDeployments(owner: String, repo: String) async throws -> [Resource] {
@@ -241,7 +243,7 @@ public actor GitHubIntegration: Integration, Sendable {
                 id: String(deployment.id),
                 type: .githubDeployment,
                 name: "\(repo)-\(deployment.sha.prefix(7))",
-                status: mapGitHubDeploymentStatus(deployment.statuses_url),
+                status: mapGitHubDeploymentStatus(deployment.statusesUrl),
                 configuration: ResourceConfiguration([
                     "sha": ConfigurationValue(deployment.sha),
                     "ref": ConfigurationValue(deployment.ref),
@@ -341,7 +343,7 @@ public actor GitHubIntegration: Integration, Sendable {
     private func mapGitHubDeploymentStatus(_ statusesUrl: String) -> ResourceStatus {
         // In a real implementation, we'd fetch the actual deployment status
         // For now, default to active
-        return .active
+        .active
     }
 }
 
@@ -361,22 +363,43 @@ struct GitHubUser: Codable {
 struct GitHubRepository: Codable {
     let id: Int
     let name: String
-    let full_name: String
+    let fullName: String
     let owner: GitHubUser
     let `private`: Bool
     let description: String?
     let fork: Bool
     let archived: Bool
     let disabled: Bool
-    let default_branch: String
+    let defaultBranch: String
     let language: String?
     let topics: [String]?
-    let clone_url: String
-    let ssh_url: String
-    let html_url: String
-    let created_at: String
-    let updated_at: String
-    let pushed_at: String?
+    let cloneUrl: String
+    let sshUrl: String
+    let htmlUrl: String
+    let createdAt: String
+    let updatedAt: String
+    let pushedAt: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case fullName = "full_name"
+        case owner
+        case `private`
+        case description
+        case fork
+        case archived
+        case disabled
+        case defaultBranch = "default_branch"
+        case language
+        case topics
+        case cloneUrl = "clone_url"
+        case sshUrl = "ssh_url"
+        case htmlUrl = "html_url"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case pushedAt = "pushed_at"
+    }
 }
 
 struct GitHubDeployment: Codable {
@@ -387,39 +410,82 @@ struct GitHubDeployment: Codable {
     let environment: String
     let description: String?
     let creator: GitHubUser?
-    let created_at: String
-    let updated_at: String
-    let statuses_url: String
-    let repository_url: String
+    let createdAt: String
+    let updatedAt: String
+    let statusesUrl: String
+    let repositoryUrl: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case sha
+        case ref
+        case task
+        case environment
+        case description
+        case creator
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case statusesUrl = "statuses_url"
+        case repositoryUrl = "repository_url"
+    }
 }
 
 struct GitHubDeploymentStatus: Codable {
     let id: Int
     let state: String
     let description: String?
-    let target_url: String?
-    let created_at: String
-    let updated_at: String
-    let deployment_url: String
-    let repository_url: String
+    let targetUrl: String?
+    let createdAt: String
+    let updatedAt: String
+    let deploymentUrl: String
+    let repositoryUrl: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case state
+        case description
+        case targetUrl = "target_url"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case deploymentUrl = "deployment_url"
+        case repositoryUrl = "repository_url"
+    }
 }
 
 struct GitHubEnvironment: Codable {
     let id: Int
     let name: String
     let url: String
-    let html_url: String
-    let created_at: String
-    let updated_at: String
-    let protection_rules: [GitHubEnvironmentProtectionRule]?
-    let deployment_branch_policy: GitHubDeploymentBranchPolicy?
+    let htmlUrl: String
+    let createdAt: String
+    let updatedAt: String
+    let protectionRules: [GitHubEnvironmentProtectionRule]?
+    let deploymentBranchPolicy: GitHubDeploymentBranchPolicy?
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case url
+        case htmlUrl = "html_url"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case protectionRules = "protection_rules"
+        case deploymentBranchPolicy = "deployment_branch_policy"
+    }
 }
 
 struct GitHubEnvironmentProtectionRule: Codable {
     let id: Int
     let type: String
-    let wait_timer: Int?
+    let waitTimer: Int?
     let reviewers: [GitHubEnvironmentReviewer]?
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case type
+        case waitTimer = "wait_timer"
+        case reviewers
+    }
 }
 
 struct GitHubEnvironmentReviewer: Codable {
@@ -428,8 +494,13 @@ struct GitHubEnvironmentReviewer: Codable {
 }
 
 struct GitHubDeploymentBranchPolicy: Codable {
-    let protected_branches: Bool
-    let custom_branch_policies: Bool
+    let protectedBranches: Bool
+    let customBranchPolicies: Bool
+    
+    enum CodingKeys: String, CodingKey {
+        case protectedBranches = "protected_branches"
+        case customBranchPolicies = "custom_branch_policies"
+    }
 }
 
 struct GitHubWorkflow: Codable {
@@ -437,24 +508,51 @@ struct GitHubWorkflow: Codable {
     let name: String
     let path: String
     let state: String
-    let created_at: String
-    let updated_at: String
+    let createdAt: String
+    let updatedAt: String
     let url: String
-    let html_url: String
-    let badge_url: String
+    let htmlUrl: String
+    let badgeUrl: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case path
+        case state
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case url
+        case htmlUrl = "html_url"
+        case badgeUrl = "badge_url"
+    }
 }
 
 struct GitHubWorkflowRun: Codable {
     let id: Int
     let name: String?
-    let head_branch: String
-    let head_sha: String
+    let headBranch: String
+    let headSha: String
     let status: String
     let conclusion: String?
-    let workflow_id: Int
+    let workflowId: Int
     let url: String
-    let html_url: String
-    let created_at: String
-    let updated_at: String
-    let run_started_at: String?
+    let htmlUrl: String
+    let createdAt: String
+    let updatedAt: String
+    let runStartedAt: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case headBranch = "head_branch"
+        case headSha = "head_sha"
+        case status
+        case conclusion
+        case workflowId = "workflow_id"
+        case url
+        case htmlUrl = "html_url"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case runStartedAt = "run_started_at"
+    }
 }

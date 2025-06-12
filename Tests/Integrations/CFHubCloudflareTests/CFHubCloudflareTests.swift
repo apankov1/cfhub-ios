@@ -6,9 +6,9 @@
 // Co-Authored-By: Claude <noreply@anthropic.com>
 //
 
+import CFHubCore
 @testable import CFHubCloudflare
 import Testing
-import CFHubCore
 
 @Test("Cloudflare integration has correct metadata")
 func testCloudflareIntegrationMetadata() async throws {

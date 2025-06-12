@@ -59,7 +59,7 @@ struct ContentView: View {
                 AuthenticationView()
             }
         }
-        .onChange(of: authViewModel.isAuthenticated) { isAuthenticated in
+        .onChange(of: authViewModel.isAuthenticated) { _, isAuthenticated in
             if isAuthenticated {
                 Task {
                     await appState.activateIntegrations(with: authViewModel.credentials)
@@ -202,10 +202,10 @@ class AppState: ObservableObject {
 }
 
 /// Authentication credentials container
-struct AuthCredentials: Sendable {
+struct AuthCredentials: Sendable, Codable {
     let providers: [String: ProviderCredential]
 
-    struct ProviderCredential: Sendable {
+    struct ProviderCredential: Sendable, Codable {
         let baseURL: String
         let authentication: Authentication
     }
@@ -213,6 +213,7 @@ struct AuthCredentials: Sendable {
 
 // MARK: - Preview Support
 
+/*
 #Preview("Authenticated") {
     ContentView()
         .environmentObject(AppState())
@@ -230,3 +231,4 @@ struct AuthCredentials: Sendable {
         .environmentObject(AuthViewModel())
         .environmentObject(DashboardViewModel())
 }
+*/

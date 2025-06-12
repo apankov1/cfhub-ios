@@ -230,7 +230,6 @@ public actor HTTPClient {
                     headers: httpResponse.allHeaderFields as? [String: String] ?? [:],
                     body: body
                 )
-
             } catch {
                 lastError = error
                 // Don't retry for certain errors

@@ -57,14 +57,14 @@ public enum IntegrationError: Error, Sendable {
 
     public var localizedDescription: String {
         switch self {
-        case .authenticationFailed(let reason):
+        case let .authenticationFailed(reason):
             return "Authentication failed: \(reason)"
         case .tokenExpired:
             return "Authentication token has expired. Please sign in again."
-        case .insufficientPermissions(let required):
+        case let .insufficientPermissions(required):
             let permissions = required.map { "\($0.scope):\($0.level.rawValue)" }.joined(separator: ", ")
             return "Insufficient permissions. Required: \(permissions)"
-        case .rateLimited(let retryAfter):
+        case let .rateLimited(retryAfter):
             if let retryAfter = retryAfter {
                 return "Rate limited. Try again in \(Int(retryAfter)) seconds."
             } else {
@@ -72,52 +72,52 @@ public enum IntegrationError: Error, Sendable {
             }
         case .networkUnavailable:
             return "Network unavailable. Check your internet connection."
-        case .requestTimeout(let duration):
+        case let .requestTimeout(duration):
             return "Request timed out after \(duration) seconds."
-        case .serverError(let statusCode, let message):
+        case let .serverError(statusCode, message):
             return "Server error (\(statusCode)): \(message ?? "Unknown error")"
-        case .invalidResponse(let expected, let received):
+        case let .invalidResponse(expected, received):
             return "Invalid response. Expected \(expected), received \(received)."
-        case .resourceNotFound(let id, let type):
+        case let .resourceNotFound(id, type):
             return "\(type.displayName) with ID '\(id)' not found."
-        case .resourceAlreadyExists(let id, let type):
+        case let .resourceAlreadyExists(id, type):
             return "\(type.displayName) with ID '\(id)' already exists."
-        case .resourceInInvalidState(let id, let currentState, let requiredState):
+        case let .resourceInInvalidState(id, currentState, requiredState):
             return "Resource '\(id)' is in state '\(currentState.rawValue)' but requires '\(requiredState.rawValue)'."
-        case .resourceLocked(let id, let lockHolder):
+        case let .resourceLocked(id, lockHolder):
             if let lockHolder = lockHolder {
                 return "Resource '\(id)' is locked by '\(lockHolder)'."
             } else {
                 return "Resource '\(id)' is locked."
             }
-        case .actionNotSupported(let action, let resourceType):
+        case let .actionNotSupported(action, resourceType):
             return "Action '\(action.rawValue)' is not supported for \(resourceType.displayName)."
-        case .actionFailed(let action, let underlyingError):
+        case let .actionFailed(action, underlyingError):
             return "Action '\(action.operation.displayName)' failed: \(underlyingError)"
-        case .dependencyNotMet(let actionId, let missingDependency):
+        case let .dependencyNotMet(actionId, missingDependency):
             return "Action '\(actionId)' cannot proceed. Missing dependency: '\(missingDependency)'"
-        case .concurrentModification(let resourceId):
+        case let .concurrentModification(resourceId):
             return "Resource '\(resourceId)' was modified by another process. Please retry."
-        case .invalidConfiguration(let field, let reason):
+        case let .invalidConfiguration(field, reason):
             return "Invalid configuration for '\(field)': \(reason)"
-        case .missingRequiredField(let field):
+        case let .missingRequiredField(field):
             return "Required field '\(field)' is missing."
-        case .configurationConflict(let field1, let field2, let reason):
+        case let .configurationConflict(field1, field2, reason):
             return "Configuration conflict between '\(field1)' and '\(field2)': \(reason)"
-        case .validationFailed(let errors):
+        case let .validationFailed(errors):
             let errorMessages = errors.map(\.message).joined(separator: "; ")
             return "Validation failed: \(errorMessages)"
-        case .unsupportedOperation(let operation, let context):
+        case let .unsupportedOperation(operation, context):
             return "Operation '\(operation)' is not supported in context '\(context)'."
-        case .quotaExceeded(let resource, let limit, let current):
+        case let .quotaExceeded(resource, limit, current):
             return "Quota exceeded for '\(resource)'. Limit: \(limit), Current: \(current)."
-        case .cloudflareError(let code, let message):
+        case let .cloudflareError(code, message):
             return "Cloudflare API error (\(code)): \(message)"
-        case .githubError(let code, let message):
+        case let .githubError(code, message):
             return "GitHub API error (\(code)): \(message)"
-        case .unknown(let message):
+        case let .unknown(message):
             return "Unknown error: \(message)"
-        case .internalError(let file, let line, let function):
+        case let .internalError(file, line, function):
             return "Internal error in \(function) at \(file):\(line)"
         }
     }
@@ -270,25 +270,25 @@ public enum ErrorSeverity: String, Sendable, Codable, CaseIterable {
 
 // MARK: - Error Creation Helpers
 
-extension IntegrationError {
+public extension IntegrationError {
     /// Create an authentication error with context
-    public static func authFailure(
+    static func authFailure(
         reason: String,
         file: String = #file,
         line: Int = #line,
         function: String = #function
     ) -> IntegrationError {
-        return .authenticationFailed(reason: "\(reason) [\(function)]")
+        .authenticationFailed(reason: "\(reason) [\(function)]")
     }
 
     /// Create an internal error with file/line context
-    public static func internalFailure(
+    static func internalFailure(
         message: String = "Unexpected error occurred",
         file: String = #file,
         line: Int = #line,
         function: String = #function
     ) -> IntegrationError {
-        return .internalError(file: file, line: line, function: function)
+        .internalError(file: file, line: line, function: function)
     }
 
     /// Create a resource error with type safety
@@ -303,9 +303,9 @@ extension IntegrationError {
             return .resourceNotFound(id: id, type: type)
         case .alreadyExists:
             return .resourceAlreadyExists(id: id, type: type)
-        case .invalidState(let current, let required):
+        case let .invalidState(current, required):
             return .resourceInInvalidState(id: id, currentState: current, requiredState: required)
-        case .locked(let holder):
+        case let .locked(holder):
             return .resourceLocked(id: id, lockHolder: holder)
         }
     }

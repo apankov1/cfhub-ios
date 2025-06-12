@@ -40,23 +40,30 @@ struct DashboardView: View {
 
                     // Quick Actions
                     QuickActionsCard(
-                        actions: viewModel.quickActions,
-                        onActionSelected: { action in
-                            Task {
-                                await viewModel.executeQuickAction(action)
-                            }
+                        actions: viewModel.quickActions
+                    ) { action in
+                        Task {
+                            await viewModel.executeQuickAction(action)
                         }
-                    )
+                    }
                 }
                 .padding()
             }
             .navigationTitle("Infrastructure")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.large)
+            #endif
             .refreshable {
                 await viewModel.refresh()
             }
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: {
+                    #if os(iOS)
+                    return .navigationBarTrailing
+                    #else
+                    return .automatic
+                    #endif
+                }()) {
                     Button {
                         showingQuickActions = true
                     } label: {
@@ -67,14 +74,13 @@ struct DashboardView: View {
             }
             .sheet(isPresented: $showingQuickActions) {
                 QuickActionsSheet(
-                    actions: viewModel.quickActions,
-                    onActionSelected: { action in
-                        showingQuickActions = false
-                        Task {
-                            await viewModel.executeQuickAction(action)
-                        }
+                    actions: viewModel.quickActions
+                ) { action in
+                    showingQuickActions = false
+                    Task {
+                        await viewModel.executeQuickAction(action)
                     }
-                )
+                }
             }
             .overlay {
                 if viewModel.isLoading {
@@ -135,7 +141,11 @@ struct OverallStatusCard: View {
             }
         }
         .padding()
+        #if os(iOS)
         .background(Color(.systemBackground))
+        #else
+        .background(Color(NSColor.windowBackgroundColor))
+        #endif
         .cornerRadius(12)
         .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
     }
@@ -164,7 +174,11 @@ struct ActiveDeploymentsCard: View {
             }
         }
         .padding()
+        #if os(iOS)
         .background(Color(.systemBackground))
+        #else
+        .background(Color(NSColor.windowBackgroundColor))
+        #endif
         .cornerRadius(12)
         .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
     }
@@ -247,7 +261,11 @@ struct EnvironmentsGrid: View {
             }
         }
         .padding()
+        #if os(iOS)
         .background(Color(.systemBackground))
+        #else
+        .background(Color(NSColor.windowBackgroundColor))
+        #endif
         .cornerRadius(12)
         .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
     }
@@ -331,7 +349,11 @@ struct QuickActionsCard: View {
             }
         }
         .padding()
+        #if os(iOS)
         .background(Color(.systemBackground))
+        #else
+        .background(Color(NSColor.windowBackgroundColor))
+        #endif
         .cornerRadius(12)
         .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
     }
@@ -384,9 +406,17 @@ struct QuickActionsSheet: View {
                 }
             }
             .navigationTitle("Quick Actions")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.large)
+            #endif
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: {
+                    #if os(iOS)
+                    return .navigationBarTrailing
+                    #else
+                    return .automatic
+                    #endif
+                }()) {
                     Button("Done") {
                         dismiss()
                     }
@@ -481,6 +511,7 @@ struct EmptyStateView: View {
 
 // MARK: - Preview Support
 
+/*
 #Preview("Dashboard - Healthy") {
     DashboardView()
         .environmentObject({
@@ -502,7 +533,7 @@ struct EmptyStateView: View {
                     name: "production",
                     status: .active,
                     url: "https://app.example.com",
-                    lastDeployed: Date().addingTimeInterval(-3600),
+                    lastDeployed: Date().addingTimeInterval(-3_600),
                     resourceCount: 5
                 ),
                 EnvironmentSummary(
@@ -510,14 +541,16 @@ struct EmptyStateView: View {
                     name: "staging",
                     status: .active,
                     url: "https://staging.example.com",
-                    lastDeployed: Date().addingTimeInterval(-1800),
+                    lastDeployed: Date().addingTimeInterval(-1_800),
                     resourceCount: 3
                 )
             ]
             return vm
         }())
 }
+*/
 
+/*
 #Preview("Dashboard - Critical") {
     DashboardView()
         .environmentObject({
@@ -528,3 +561,4 @@ struct EmptyStateView: View {
             return vm
         }())
 }
+*/

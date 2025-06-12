@@ -248,7 +248,10 @@ struct ProviderAuthenticationView: View {
                                 .fontWeight(.medium)
                         }
 
-                        Text("Your credentials are securely stored and encrypted. CFHub uses a proxy model where your actual API tokens remain on your development machine.")
+                        Text("""
+                            Your credentials are securely stored and encrypted. CFHub uses a proxy model where \
+                            your actual API tokens remain on your development machine.
+                            """)
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }

@@ -14,7 +14,7 @@ import Foundation
 ///
 /// Self-contained integration following cloudflare-hub patterns.
 /// Owns all Cloudflare-specific types, API calls, and business logic.
-public actor CloudflareIntegration: Integration, Sendable {
+public actor CloudflareIntegration: Integration {
     public static let identifier = "cloudflare"
     public static let displayName = "Cloudflare"
     public static let version = "1.0.0"
@@ -52,7 +52,7 @@ public actor CloudflareIntegration: Integration, Sendable {
         }
 
         guard let baseURL = URL(string: configuration.baseURL) else {
-            throw IntegrationError.invalidConfiguration(reason: "Invalid base URL: \(configuration.baseURL)")
+            throw IntegrationError.invalidConfiguration(field: "baseURL", reason: "Invalid base URL: \(configuration.baseURL)")
         }
 
         self.client = HTTPClient(
@@ -187,11 +187,11 @@ public actor CloudflareIntegration: Integration, Sendable {
                 id: page.id,
                 type: .cloudflarePages,
                 name: page.name,
-                status: mapCloudflareStatus(page.deployment_configs.production.deployment?.stage ?? ""),
+                status: mapCloudflareStatus(page.deploymentConfigs.production.deployment?.stage ?? ""),
                 configuration: ResourceConfiguration([
                     "domain": ConfigurationValue(page.domains?.first ?? ""),
                     "source": ConfigurationValue(page.source?.type ?? ""),
-                    "build_command": ConfigurationValue(page.build_config?.build_command ?? "")
+                    "build_command": ConfigurationValue(page.buildConfig?.buildCommand ?? "")
                 ])
             )
         }
@@ -214,7 +214,7 @@ public actor CloudflareIntegration: Integration, Sendable {
                 name: worker.id,
                 status: .active, // Workers don't have detailed status
                 configuration: ResourceConfiguration([
-                    "usage_model": ConfigurationValue(worker.usage_model ?? "bundled"),
+                    "usage_model": ConfigurationValue(worker.usageModel ?? "bundled"),
                     "routes": ConfigurationValue(worker.routes?.map(\.pattern) ?? [])
                 ])
             )
@@ -238,9 +238,9 @@ public actor CloudflareIntegration: Integration, Sendable {
                 name: zone.name,
                 status: mapCloudflareStatus(zone.status),
                 configuration: ResourceConfiguration([
-                    "name_servers": ConfigurationValue(zone.name_servers),
+                    "name_servers": ConfigurationValue(zone.nameServers),
                     "plan": ConfigurationValue(zone.plan.name),
-                    "development_mode": ConfigurationValue(zone.development_mode ?? 0)
+                    "development_mode": ConfigurationValue(zone.developmentMode ?? 0)
                 ])
             )
         }
@@ -385,8 +385,8 @@ struct CloudflarePage: Codable {
     let name: String
     let domains: [String]?
     let source: CloudflarePageSource?
-    let build_config: CloudflarePageBuildConfig?
-    let deployment_configs: CloudflarePageDeploymentConfigs
+    let buildConfig: CloudflarePageBuildConfig?
+    let deploymentConfigs: CloudflarePageDeploymentConfigs
 }
 
 struct CloudflarePageSource: Codable {
@@ -396,14 +396,14 @@ struct CloudflarePageSource: Codable {
 
 struct CloudflarePageSourceConfig: Codable {
     let owner: String
-    let repo_name: String
-    let production_branch: String
+    let repoName: String
+    let productionBranch: String
 }
 
 struct CloudflarePageBuildConfig: Codable {
-    let build_command: String?
-    let destination_dir: String?
-    let root_dir: String?
+    let buildCommand: String?
+    let destinationDir: String?
+    let rootDir: String?
 }
 
 struct CloudflarePageDeploymentConfigs: Codable {
@@ -427,13 +427,13 @@ struct CloudflareWorkersResponse: Codable {
 
 struct CloudflareWorker: Codable {
     let id: String
-    let usage_model: String?
+    let usageModel: String?
     let routes: [CloudflareWorkerRoute]?
 }
 
 struct CloudflareWorkerRoute: Codable {
     let pattern: String
-    let zone_id: String?
+    let zoneId: String?
 }
 
 struct CloudflareZonesResponse: Codable {
@@ -445,9 +445,9 @@ struct CloudflareZone: Codable {
     let id: String
     let name: String
     let status: String
-    let name_servers: [String]
+    let nameServers: [String]
     let plan: CloudflareZonePlan
-    let development_mode: Int?
+    let developmentMode: Int?
 }
 
 struct CloudflareZonePlan: Codable {
