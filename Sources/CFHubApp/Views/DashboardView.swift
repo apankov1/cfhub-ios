@@ -78,12 +78,16 @@ struct DashboardView: View {
                 }
             }
             .sheet(isPresented: $showingQuickActions) {
-                QuickActionsSheet(
-                    actions: viewModel.quickActions
-                ) { action in
-                    showingQuickActions = false
-                    Task {
-                        await viewModel.executeQuickAction(action)
+                if viewModel.quickActions.isEmpty {
+                    EmptyView()
+                } else {
+                    QuickActionsSheet(
+                        actions: viewModel.quickActions
+                    ) { action in
+                        showingQuickActions = false
+                        Task {
+                            await viewModel.executeQuickAction(action)
+                        }
                     }
                 }
             }

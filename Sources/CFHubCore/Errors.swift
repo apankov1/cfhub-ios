@@ -292,7 +292,7 @@ public extension IntegrationError {
     }
 
     /// Create a resource error with type safety
-    public static func resourceError(
+    static func resourceError(
         _ error: ResourceErrorType,
         id: String,
         type: ResourceType,

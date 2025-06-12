@@ -336,7 +336,7 @@ class AuthViewModel: ObservableObject {
 
 /// Authentication provider configuration
 struct AuthProvider: Identifiable, Codable {
-    let id = UUID()
+    var id = UUID()
     let identifier: String
     let displayName: String
     let baseURL: String
@@ -348,6 +348,10 @@ struct AuthProvider: Identifiable, Codable {
         case oauth = "oauth"
         case apiKey = "api_key"
         case bearer = "bearer"
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case id, identifier, displayName, baseURL, authType, iconName, description
     }
 }
 

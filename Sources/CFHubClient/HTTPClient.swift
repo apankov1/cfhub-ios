@@ -6,7 +6,7 @@
 // Co-Authored-By: Claude <noreply@anthropic.com>
 //
 
-import Foundation
+@preconcurrency import Foundation
 
 /// Platform-agnostic HTTP client for CFHub integrations
 ///

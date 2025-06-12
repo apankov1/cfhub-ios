@@ -100,10 +100,14 @@ struct AuthenticationView: View {
                 .padding(.bottom, 32)
             }
             .navigationTitle("Sign In")
+            #if os(iOS)
             .navigationBarHidden(true)
+            #endif
             .sheet(isPresented: $showingProviderAuth) {
                 if let provider = selectedProvider {
                     ProviderAuthenticationView(provider: provider)
+                } else {
+                    EmptyView()
                 }
             }
             .overlay {
@@ -221,7 +225,7 @@ struct ProviderAuthenticationView: View {
                     .padding(.vertical, 8)
                 }
 
-                Section("Credentials") {
+                Section(header: Text("Credentials")) {
                     switch provider.authType {
                     case .apiKey:
                         TextField("API Key", text: $apiKey)
@@ -229,7 +233,9 @@ struct ProviderAuthenticationView: View {
 
                         TextField("Email (optional)", text: $email)
                             .textContentType(.emailAddress)
+                            #if os(iOS)
                             .autocapitalization(.none)
+                            #endif
 
                     case .bearer, .oauth:
                         TextField("Access Token", text: $token)
@@ -259,15 +265,17 @@ struct ProviderAuthenticationView: View {
                 }
             }
             .navigationTitle("\(provider.displayName) Setup")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
                         dismiss()
                     }
                 }
 
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .confirmationAction) {
                     Button("Connect") {
                         Task {
                             await authenticateWithProvider()
@@ -432,35 +440,40 @@ struct SettingsView: View {
 
 // MARK: - Preview Support
 
-#Preview("Authentication") {
-    AuthenticationView()
-        .environmentObject(AuthViewModel())
-}
+#if DEBUG
+struct AuthenticationView_Previews: PreviewProvider {
+    static var previews: some View {
+        Group {
+            AuthenticationView()
+                .environmentObject(AuthViewModel())
+                .previewDisplayName("Authentication")
 
-#Preview("Provider Auth - GitHub") {
-    ProviderAuthenticationView(
-        provider: AuthProvider(
-            identifier: "github",
-            displayName: "GitHub",
-            baseURL: "https://api.github.com",
-            authType: .oauth,
-            iconName: "cloud",
-            description: "Connect to GitHub for repository management"
-        )
-    )
-    .environmentObject(AuthViewModel())
-}
+            ProviderAuthenticationView(
+                provider: AuthProvider(
+                    identifier: "github",
+                    displayName: "GitHub",
+                    baseURL: "https://api.github.com",
+                    authType: .oauth,
+                    iconName: "cloud",
+                    description: "Connect to GitHub for repository management"
+                )
+            )
+            .environmentObject(AuthViewModel())
+            .previewDisplayName("Provider Auth - GitHub")
 
-#Preview("Provider Auth - Cloudflare") {
-    ProviderAuthenticationView(
-        provider: AuthProvider(
-            identifier: "cloudflare",
-            displayName: "Cloudflare",
-            baseURL: "https://api.cloudflare.com/client/v4",
-            authType: .apiKey,
-            iconName: "shield",
-            description: "Connect to Cloudflare for DNS and Pages management"
-        )
-    )
-    .environmentObject(AuthViewModel())
+            ProviderAuthenticationView(
+                provider: AuthProvider(
+                    identifier: "cloudflare",
+                    displayName: "Cloudflare",
+                    baseURL: "https://api.cloudflare.com/client/v4",
+                    authType: .apiKey,
+                    iconName: "shield",
+                    description: "Connect to Cloudflare for DNS and Pages management"
+                )
+            )
+            .environmentObject(AuthViewModel())
+            .previewDisplayName("Provider Auth - Cloudflare")
+        }
+    }
 }
+#endif
