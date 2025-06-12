@@ -8,6 +8,11 @@
 
 import CFHubCore
 import SwiftUI
+#if os(iOS)
+import UIKit
+#elseif os(macOS)
+import AppKit
+#endif
 
 /// Main dashboard view showing infrastructure status
 ///
