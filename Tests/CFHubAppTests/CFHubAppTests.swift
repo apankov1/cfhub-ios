@@ -10,6 +10,7 @@
 import Testing
 
 @Test("App initializes successfully")
+@MainActor
 func testAppInitialization() async throws {
     let appState = AppState()
     #expect(!appState.isInitialized)
@@ -19,6 +20,7 @@ func testAppInitialization() async throws {
 }
 
 @Test("Dashboard view model starts in correct state")
+@MainActor
 func testDashboardViewModelInitialState() async throws {
     let viewModel = DashboardViewModel()
 

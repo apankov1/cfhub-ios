@@ -7,6 +7,7 @@
 //
 
 @testable import CFHubClient
+import Foundation
 import Testing
 
 @Test("HTTP client initializes with correct configuration")
@@ -19,7 +20,9 @@ func testHTTPClientInitialization() async throws {
     )
 
     // Basic smoke test - client should initialize without errors
-    #expect(client != nil)
+    // Since HTTPClient is an actor and properties are private, 
+    // we can only verify it was created successfully
+    _ = client  // Verify no crash on initialization
 }
 
 @Test("Retry policy has correct default values")

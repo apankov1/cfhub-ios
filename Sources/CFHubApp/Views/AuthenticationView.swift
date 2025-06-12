@@ -104,10 +104,12 @@ struct AuthenticationView: View {
             .navigationBarHidden(true)
             #endif
             .sheet(isPresented: $showingProviderAuth) {
-                if let provider = selectedProvider {
-                    ProviderAuthenticationView(provider: provider)
-                } else {
-                    EmptyView()
+                Group {
+                    if let provider = selectedProvider {
+                        ProviderAuthenticationView(provider: provider)
+                    } else {
+                        EmptyView()
+                    }
                 }
             }
             .overlay {

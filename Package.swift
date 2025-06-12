@@ -32,7 +32,6 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-testing.git", from: "0.4.0")
     ],
     targets: [
         // MARK: - Main App Target
@@ -120,40 +119,35 @@ let package = Package(
         .testTarget(
             name: "CFHubAppTests",
             dependencies: [
-                "CFHubApp",
-                .product(name: "Testing", package: "swift-testing")
+                "CFHubApp"
             ],
             path: "Tests/CFHubAppTests"
         ),
         .testTarget(
             name: "CFHubCoreTests",
             dependencies: [
-                "CFHubCore",
-                .product(name: "Testing", package: "swift-testing")
+                "CFHubCore"
             ],
             path: "Tests/CFHubCoreTests"
         ),
         .testTarget(
             name: "CFHubCloudflareTests",
             dependencies: [
-                "CFHubCloudflare",
-                .product(name: "Testing", package: "swift-testing")
+                "CFHubCloudflare"
             ],
             path: "Tests/Integrations/CFHubCloudflareTests"
         ),
         .testTarget(
             name: "CFHubGitHubTests",
             dependencies: [
-                "CFHubGitHub",
-                .product(name: "Testing", package: "swift-testing")
+                "CFHubGitHub"
             ],
             path: "Tests/Integrations/CFHubGitHubTests"
         ),
         .testTarget(
             name: "CFHubClientTests",
             dependencies: [
-                "CFHubClient",
-                .product(name: "Testing", package: "swift-testing")
+                "CFHubClient"
             ],
             path: "Tests/CFHubClientTests"
         )

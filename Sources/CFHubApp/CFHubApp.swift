@@ -16,7 +16,9 @@ import SwiftUI
 /// - Real-time infrastructure monitoring
 /// - Emergency response capabilities
 /// - Team collaboration on infrastructure changes
+#if !TESTING
 @main
+#endif
 struct CFHubApp: App {
     @StateObject private var appState = AppState()
     @StateObject private var authViewModel = AuthViewModel()
